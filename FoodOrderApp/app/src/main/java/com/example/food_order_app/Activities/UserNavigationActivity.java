@@ -6,21 +6,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment; // Thêm dòng này
 
 
-import com.example.food_order_app.Fragments.CartFragment;
-import com.example.food_order_app.Fragments.HomeFragment;
-import com.example.food_order_app.Fragments.MenuFragment;
-import com.example.food_order_app.Fragments.ProfileFragment;
+import com.example.food_order_app.UserFragments.CartFragment;
+import com.example.food_order_app.UserFragments.HomeFragment;
+import com.example.food_order_app.UserFragments.MenuFragment;
+import com.example.food_order_app.UserFragments.ProfileFragment;
 import com.example.food_order_app.R;
-import com.example.food_order_app.databinding.ActivityNavigationBinding;
+import com.example.food_order_app.databinding.UserActivityNavigationBinding;
 
-public class NavigationActivity extends AppCompatActivity {
+public class UserNavigationActivity extends AppCompatActivity {
 
-    ActivityNavigationBinding binding;
+    UserActivityNavigationBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        binding = ActivityNavigationBinding.inflate(getLayoutInflater());
+        binding = UserActivityNavigationBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());//dùng để set layout trong activity bằng binding.getRoot()
         // Mặc định mở HomeFragment khi Activity khởi động
         openFragment(new HomeFragment());
