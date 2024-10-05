@@ -13,7 +13,7 @@ import com.example.food_order_app.UserFragments.ProfileFragment;
 import com.example.food_order_app.R;
 import com.example.food_order_app.databinding.ActivityNavigationBinding;
 
-public class NavigationActivity extends AppCompatActivity {
+public class UserNavigationActivity extends AppCompatActivity {
 
     ActivityNavigationBinding binding;
 

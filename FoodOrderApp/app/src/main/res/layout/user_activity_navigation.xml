@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Activities.NavigationActivity">
+    tools:context=".Activities.UserNavigationActivity">
 
     <FrameLayout
         android:id="@+id/frame_layout_bottom_navigation"

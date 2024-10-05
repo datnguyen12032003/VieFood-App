@@ -52,7 +52,7 @@ public class LoginActivity extends AppCompatActivity {
             User user = new User(email, password);
             boolean login = login(user);
             if(login){
-                Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
+                Intent intent = new Intent(LoginActivity.this, UserNavigationActivity.class);
                 startActivity(intent);
             }
         });
