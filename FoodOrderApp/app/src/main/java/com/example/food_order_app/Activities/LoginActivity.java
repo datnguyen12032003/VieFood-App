@@ -1,5 +1,6 @@
 package com.example.food_order_app.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.Button;
@@ -14,6 +15,8 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.example.food_order_app.Database.UserDatabase;
+import com.example.food_order_app.Fragments.HomeFragment;
+import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
 
@@ -36,6 +39,12 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.txt_password);
         btnTogglePassword = findViewById(R.id.btn_toggle_password);
 
+        // Thiết lập sự kiện nhấn nút quay lại
+        btnBack.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+            startActivity(intent);
+        });
+
         // Thiết lập sự kiện nhấn nút ẩn hiện mật khẩu
         btnTogglePassword.setOnClickListener(view -> togglePasswordVisibility());
 
@@ -45,22 +54,30 @@ public class LoginActivity extends AppCompatActivity {
             String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
             User user = new User(email, password);
-            login(user);
+            boolean login = login(user);
+            if(login){
+                Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
+                startActivity(intent);
+            }
         });
 
     }
 
-    private void login(User user) {
+    private boolean login(User user) {
         try {
             User getuser = UserDatabase.getInstance(this).userDao().getUserByEmailAndPassword(user.getUserEmail(), user.getUserPassword());
             if (getuser == null) {
                 throw new Exception();
             }
+
             Toast.makeText(this, "Login successfully", Toast.LENGTH_SHORT).show();
             // Xử lý khi đăng nhập thành công
+            return true;
         } catch (Exception ex) {
             // Xử lý khi đăng nhập thất bại
+
             Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 
