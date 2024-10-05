@@ -3,12 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-<<<<<<< HEAD:FoodOrderApp/app/src/main/res/layout/user_fragment_home.xml
     android:orientation="vertical"
     tools:context=".UserFragments.HomeFragment">
-=======
-    tools:context=".Fragments.HomeFragment" >
->>>>>>> parent of f107ccb (trang HOME):FoodOrderApp/app/src/main/res/layout/fragment_home.xml
 
     <!-- TODO: Update blank fragment layout -->
     <TextView
