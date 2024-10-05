@@ -1,4 +1,4 @@
-package com.example.food_order_app.Fragments;
+package com.example.food_order_app.UserFragments;
 
 import android.os.Bundle;
 
@@ -61,6 +61,6 @@ public class CartFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_cart, container, false);
+        return inflater.inflate(R.layout.user_fragment_cart, container, false);
     }
 }

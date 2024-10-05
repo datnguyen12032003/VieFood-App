@@ -6,10 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment; // Thêm dòng này
 
 
-import com.example.food_order_app.Fragments.CartFragment;
-import com.example.food_order_app.Fragments.HomeFragment;
-import com.example.food_order_app.Fragments.MenuFragment;
-import com.example.food_order_app.Fragments.ProfileFragment;
+import com.example.food_order_app.UserFragments.CartFragment;
+import com.example.food_order_app.UserFragments.HomeFragment;
+import com.example.food_order_app.UserFragments.MenuFragment;
+import com.example.food_order_app.UserFragments.ProfileFragment;
 import com.example.food_order_app.R;
 import com.example.food_order_app.databinding.ActivityNavigationBinding;
 

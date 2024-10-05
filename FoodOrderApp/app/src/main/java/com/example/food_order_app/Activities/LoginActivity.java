@@ -10,12 +10,8 @@ import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.food_order_app.Database.UserDatabase;
-import com.example.food_order_app.Fragments.HomeFragment;
 import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;

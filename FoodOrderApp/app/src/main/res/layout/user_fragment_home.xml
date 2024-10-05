@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".Fragments.HomeFragment">
+    tools:context=".UserFragments.HomeFragment">
 
     <!-- Thanh tìm kiếm -->
     <LinearLayout
