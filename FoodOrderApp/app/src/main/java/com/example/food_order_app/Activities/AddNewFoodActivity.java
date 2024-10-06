@@ -18,12 +18,16 @@ import com.example.food_order_app.Fragments.DashboardFragment;
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.R;
 import com.example.food_order_app.Database.AppDatabase;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class AddNewFoodActivity extends AppCompatActivity {
 
     private EditText etFoodName, etFoodPrice, etFoodQuantity, etFoodDescription;
     private RadioGroup radioGroupCategory;
     private Button btnAddFood;
+    private DatabaseReference foodItems = FirebaseDatabase.getInstance().getReferenceFromUrl("https://viefood-da6a0-default-rtdb.firebaseio.com/").child("FoodItems");
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,6 +69,16 @@ public class AddNewFoodActivity extends AppCompatActivity {
                     // Tạo đối tượng FoodItem và lưu vào database
                     FoodItem foodItem = new FoodItem(category, description, "", name, price, quantity, 0, true);
                     AppDatabase.getInstance(AddNewFoodActivity.this).foodItemDao().insertFoodItem(foodItem);
+//                    foodItems.child("food_name").setValue(name);
+//                    foodItems.child("food_price").setValue(price);
+//                    foodItems.child("food_quantity").setValue(quantity);
+//                    foodItems.child("food_description").setValue(description);
+//                    foodItems.child("food_category").setValue(category);
+                    foodItems.push().setValue(foodItem);
+
+
+
+
                     Toast.makeText(AddNewFoodActivity.this, "Add New Food Successfully", Toast.LENGTH_SHORT).show();
                     Intent intent = new Intent();
                     setResult(Activity.RESULT_OK, intent);

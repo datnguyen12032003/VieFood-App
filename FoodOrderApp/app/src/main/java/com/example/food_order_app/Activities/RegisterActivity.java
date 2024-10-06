@@ -16,6 +16,8 @@ import com.example.food_order_app.Database.AppDatabase;
 import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -23,12 +25,15 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageButton btnBack, btnTogglePassword;
     private EditText etUsername, etEmail, etPhone, etAddress, etPassword;
     private boolean isPasswordVisible = false; // Biến toàn cục cho trạng thái hiển thị mật khẩu
+    private DatabaseReference dbUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
+
+        dbUsers = FirebaseDatabase.getInstance().getReference("Users");
 
         // Khởi tạo các thành phần UI
         btnBack = findViewById(R.id.btn_back);
@@ -61,6 +66,7 @@ public class RegisterActivity extends AppCompatActivity {
                 newUser.setUserPassword(etPassword.getText().toString());
                 newUser.setAdmin(false);
                 createNewUser(newUser);
+                dbUsers.push().setValue(newUser);
             }
         });
     }

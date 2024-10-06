@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.R;
+import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
@@ -88,17 +89,14 @@ public class FoodItemDashBoardAdapter extends RecyclerView.Adapter<FoodItemDashB
         private ImageButton btnEdit, btnDelete;
 
         public FoodItemViewHolder(View v) {
-
             super(v);
             foodName = v.findViewById(R.id.foodName);
             foodDescription = v.findViewById(R.id.foodDescription);
             foodPrice = v.findViewById(R.id.foodPrice);
             foodRating = v.findViewById(R.id.foodRating);
             foodImage = v.findViewById(R.id.foodImage);
-
             btnEdit = v.findViewById(R.id.btnEdit);
             btnDelete = v.findViewById(R.id.btnDelet);
-
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.food_order_app.Fragments;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
@@ -20,6 +21,11 @@ import com.example.food_order_app.Adapters.FoodItemDashBoardAdapter;
 import com.example.food_order_app.Database.AppDatabase;
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,9 +38,12 @@ public class DashboardFragment extends Fragment {
     private List<FoodItem> foodItemList;
     private Button btnAddNewFood;
 
+    private DatabaseReference dbFoodItems;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbFoodItems = FirebaseDatabase.getInstance().getReferenceFromUrl("https://viefood-da6a0-default-rtdb.firebaseio.com/").child("FoodItems");
         foodItemList = new ArrayList<>(); // Khởi tạo danh sách món ăn
     }
 
@@ -97,12 +106,32 @@ public class DashboardFragment extends Fragment {
     }
 
     public void loadFoodItems() {
-        foodItemList = AppDatabase.getInstance(getContext()).foodItemDao().getAllFoodItems();
-        adapter.setData(foodItemList);
+        dbFoodItems.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                foodItemList.clear();
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
+                    foodItemList.add(foodItem);
+                }
+                adapter.setData(foodItemList);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(getContext(), "Failed to load food items", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
+
     public void deleteFoodItem(FoodItem foodItem) {
-        AppDatabase.getInstance(getContext()).foodItemDao().deleteFoodItem(foodItem);
-        loadFoodItems();
+      dbFoodItems.child(String.valueOf(foodItem.getFoodId())).removeValue().addOnCompleteListener(task -> {
+          if (task.isSuccessful()) {
+              Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+          } else {
+              Toast.makeText(getContext(), "Failed to delete", Toast.LENGTH_SHORT).show();
+          }
+      });
     }
 }

@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "457938162766",
+    "project_id": "viefood-da6a0",
+    "storage_bucket": "viefood-da6a0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:457938162766:android:635a610f27087c53af9f1f",
+        "android_client_info": {
+          "package_name": "com.example.food_order_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6jU2UHAwQuz6MynguE71rYUOIQmPeHqY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
