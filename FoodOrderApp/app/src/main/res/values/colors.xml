@@ -5,4 +5,7 @@
     <color name="orange">#f76035</color>
     <color name="green">#2f8e0e</color>
     <color name="gray">#d9d9d9</color>
+    <color name="lighter_gray">#f2f2f2</color>
+
+
 </resources>

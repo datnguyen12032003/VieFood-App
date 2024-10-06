@@ -1,5 +1,6 @@
 package com.example.food_order_app.Activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -58,13 +59,15 @@ public class AddNewFoodActivity extends AppCompatActivity {
 
                     // Chuyển đổi giá và số lượng
                     double price = Double.parseDouble(priceString);
-                    int quantity = Integer.parseInt(quantityString);
+                    int quantity = Integer.parseInt(quantityString);// Sửa lỗi ở đây
+
 
                     // Tạo đối tượng FoodItem và lưu vào database
                     FoodItem foodItem = new FoodItem(category, description, "", name, price, quantity, 0, true);
                     AppDatabase.getInstance(AddNewFoodActivity.this).foodItemDao().insertFoodItem(foodItem);
-
-                    Toast.makeText(AddNewFoodActivity.this, "Add New Food", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(AddNewFoodActivity.this, "Add New Food Successfully", Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent();
+                    setResult(Activity.RESULT_OK, intent);
                     finish();
 
                 } catch (Exception e) {

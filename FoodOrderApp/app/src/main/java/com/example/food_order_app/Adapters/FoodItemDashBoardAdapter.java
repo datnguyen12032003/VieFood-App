@@ -24,7 +24,6 @@ public class FoodItemDashBoardAdapter extends RecyclerView.Adapter<FoodItemDashB
 
     public interface OnItemClickListener {
         void onEditClick(FoodItem foodItem);
-
         void onDeleteClick(FoodItem foodItem);
     }
 
@@ -52,7 +51,7 @@ public class FoodItemDashBoardAdapter extends RecyclerView.Adapter<FoodItemDashB
             return;
         }
 
-        holder.foodImage.setImageResource(Integer.parseInt(newFoodItem.getImage()));
+//        holder.foodImage.setImageResource(Integer.parseInt(newFoodItem.getImage()));
         holder.foodName.setText(newFoodItem.getName());
         holder.foodDescription.setText(newFoodItem.getDescription());
         holder.foodPrice.setText(String.format("$%.2f", newFoodItem.getPrice()));

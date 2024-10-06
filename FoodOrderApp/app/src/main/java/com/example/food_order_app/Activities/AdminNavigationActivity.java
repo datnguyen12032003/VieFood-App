@@ -3,8 +3,7 @@ package com.example.food_order_app.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
@@ -15,7 +14,6 @@ import com.example.food_order_app.databinding.ActivityAdminNavigationBinding;
 public class AdminNavigationActivity extends AppCompatActivity {
 
     ActivityAdminNavigationBinding binding;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +41,7 @@ public class AdminNavigationActivity extends AppCompatActivity {
                 default:
                     return false;
             }
+
         });
     }
 
@@ -51,8 +50,6 @@ public class AdminNavigationActivity extends AppCompatActivity {
                 .replace(R.id.frame_layout_bottom_navigation, fragment)
                 .commit();
     }
-
-
 
 
 }
