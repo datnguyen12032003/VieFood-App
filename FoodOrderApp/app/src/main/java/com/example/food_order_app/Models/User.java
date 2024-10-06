@@ -26,20 +26,33 @@ public class User {
     @ColumnInfo(name = "user_password")
     private String userPassword;
 
+    @ColumnInfo(name = "admin")
+    private boolean admin;
+
+
     public User() {
     }
 
-    public User(String userName, String userPassword, String userPhone, String userEmail, String userAddress) {
+    public User(boolean admin, String userAddress, String userEmail, String userName, String userPassword, String userPhone) {
+        this.admin = admin;
+        this.userAddress = userAddress;
+        this.userEmail = userEmail;
         this.userName = userName;
         this.userPassword = userPassword;
         this.userPhone = userPhone;
-        this.userEmail = userEmail;
-        this.userAddress = userAddress;
     }
 
     public User(String userEmail, String userPassword) {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
     public String getUserPassword() {

@@ -11,7 +11,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.food_order_app.Database.UserDatabase;
+import com.example.food_order_app.Database.AppDatabase;
 import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
@@ -50,32 +50,61 @@ public class LoginActivity extends AppCompatActivity {
             String email = etEmail.getText().toString();
             String password = etPassword.getText().toString();
             User user = new User(email, password);
-            boolean login = login(user);
-            if(login){
+//            boolean login = login(user);
+//            if (login) {
+//                Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
+//                startActivity(intent);
+//            }
+            int login = login(user);
+            if (login == 0) {
                 Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
+                startActivity(intent);
+            } else if (login == 1) {
+                Intent intent = new Intent(LoginActivity.this, AdminNavigationActivity.class);
                 startActivity(intent);
             }
         });
 
     }
 
-    private boolean login(User user) {
+    private int login(User user) {
         try {
-            User getuser = UserDatabase.getInstance(this).userDao().getUserByEmailAndPassword(user.getUserEmail(), user.getUserPassword());
+            User getuser = AppDatabase.getInstance(this).userDao().getUserByEmailAndPassword(user.getUserEmail(), user.getUserPassword());
             if (getuser == null) {
                 throw new Exception();
             }
-
-            Toast.makeText(this, "Login successfully", Toast.LENGTH_SHORT).show();
-            // Xử lý khi đăng nhập thành công
-            return true;
+            if (getuser.isAdmin() == true) {
+                Toast.makeText(this, "Login successfully", Toast.LENGTH_SHORT).show();
+                return 1;
+            } else {
+                Toast.makeText(this, "Login successfully", Toast.LENGTH_SHORT).show();
+                return 0;
+            }
         } catch (Exception ex) {
             // Xử lý khi đăng nhập thất bại
-
             Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
-            return false;
+            return 3;
         }
     }
+
+//
+//    private boolean login(User user) {
+//        try {
+//            User getuser = UserDatabase.getInstance(this).userDao().getUserByEmailAndPassword(user.getUserEmail(), user.getUserPassword());
+//            if (getuser == null) {
+//                throw new Exception();
+//            }
+//
+//            Toast.makeText(this, "Login successfully", Toast.LENGTH_SHORT).show();
+//            // Xử lý khi đăng nhập thành công
+//            return true;
+//        } catch (Exception ex) {
+//            // Xử lý khi đăng nhập thất bại
+//
+//            Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
+//            return false;
+//        }
+//    }
 
     private void togglePasswordVisibility() {
         if (isPasswordVisible) {

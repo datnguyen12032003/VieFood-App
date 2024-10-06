@@ -20,14 +20,14 @@ import com.example.food_order_app.Models.Review;
 import com.example.food_order_app.Models.User;
 
 @Database(entities = {User.class, FoodItem.class, Order.class, OrderDetail.class, Categories.class, Review.class}, version = 1)
-public abstract class UserDatabase extends RoomDatabase {
+public abstract class AppDatabase extends RoomDatabase {
 
     private static final String DATABASE_NAME = "OrderFood.db";
-    private static UserDatabase instance;
+    private static AppDatabase instance;
 
-    public static synchronized UserDatabase getInstance(Context context) {
+    public static synchronized AppDatabase getInstance(Context context) {
         if (instance == null) {
-            instance = Room.databaseBuilder(context.getApplicationContext(), UserDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
+            instance = Room.databaseBuilder(context.getApplicationContext(), AppDatabase.class, DATABASE_NAME).allowMainThreadQueries().build();
         }
         return instance;
     }
@@ -43,7 +43,5 @@ public abstract class UserDatabase extends RoomDatabase {
     public abstract CategoriesDAO categoriesDao();
 
     public abstract ReviewDAO reviewDao();
-
-
 }
 
