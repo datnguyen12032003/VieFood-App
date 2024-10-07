@@ -34,6 +34,12 @@ public class User {
         this.userPassword = userPassword;
     }
 
+    public User(String userName, String userPhone, String userAddress) {
+        this.userName = userName;
+        this.userPhone = userPhone;
+        this.userAddress = userAddress;
+    }
+
     public boolean isAdmin() {
         return admin;
     }

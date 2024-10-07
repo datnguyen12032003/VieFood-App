@@ -59,9 +59,7 @@ public class LoginActivity extends AppCompatActivity {
             String password = etPassword.getText().toString();
             User user = new User(email, password);
             login(user);
-
         });
-
     }
 
     private void login(User user) {
@@ -70,7 +68,16 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
                     for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        if (dataSnapshot.child("userEmail").getValue().equals(user.getUserEmail()) && dataSnapshot.child("userPassword").getValue().equals(user.getUserPassword())) {
+                        if (dataSnapshot.child("userEmail").getValue().equals(user.getUserEmail()) &&
+                                dataSnapshot.child("userPassword").getValue().equals(user.getUserPassword())) {
+
+                            // cho để ké chỗ này lấy id cho profile nkaaa <3
+                            String userId = dataSnapshot.getKey();
+                            getSharedPreferences("user_prefs", MODE_PRIVATE)
+                                    .edit()
+                                    .putString("current_user_id", userId)
+                                    .apply();
+
                             if (dataSnapshot.child("admin").getValue().equals(true)) {
                                 Intent intent = new Intent(LoginActivity.this, AdminNavigationActivity.class);
                                 startActivity(intent);
@@ -83,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
@@ -90,7 +98,6 @@ public class LoginActivity extends AppCompatActivity {
             });
 
         } catch (Exception ex) {
-            // Xử lý khi đăng nhập thất bại
             Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
         }
     }
