@@ -12,9 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.R;
-import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
@@ -52,7 +52,8 @@ public class FoodItemDashBoardAdapter extends RecyclerView.Adapter<FoodItemDashB
             return;
         }
 
-//        holder.foodImage.setImageResource(Integer.parseInt(newFoodItem.getImage()));
+        Glide.with(holder.itemView.getContext()).load(newFoodItem.getImage()).placeholder(R.drawable.ic_image_placeholder).into(holder.foodImage);
+
         holder.foodName.setText(newFoodItem.getName());
         holder.foodDescription.setText(newFoodItem.getDescription());
         holder.foodPrice.setText(String.format("$%.2f", newFoodItem.getPrice()));

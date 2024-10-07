@@ -1,32 +1,19 @@
 package com.example.food_order_app.Models;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
-@Entity(tableName = "user")
 public class User {
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "user_id")
-    private int userId;
+    private String userId;
 
-    @ColumnInfo(name = "user_name")
     private String userName;
 
-    @ColumnInfo(name = "user_email")
     private String userEmail;
 
-    @ColumnInfo(name = "user_phone")
     private String userPhone;
-
-    @ColumnInfo(name = "user_address")
     private String userAddress;
 
-    @ColumnInfo(name = "user_password")
     private String userPassword;
 
-    @ColumnInfo(name = "admin")
     private boolean admin;
 
 
@@ -79,11 +66,11 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

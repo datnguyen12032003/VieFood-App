@@ -4,6 +4,7 @@
     android:orientation="horizontal"
     android:padding="10dp"
     android:background="@drawable/food_item"
+    android:layout_marginTop="10dp"
     >
 
     <ImageView

@@ -12,7 +12,6 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.food_order_app.Database.AppDatabase;
 import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
@@ -66,14 +65,13 @@ public class RegisterActivity extends AppCompatActivity {
                 newUser.setUserPassword(etPassword.getText().toString());
                 newUser.setAdmin(false);
                 createNewUser(newUser);
-                dbUsers.push().setValue(newUser);
             }
         });
     }
 
     private void createNewUser(User newUser) {
         try {
-            AppDatabase.getInstance(this).userDao().insertUser(newUser);
+            dbUsers.push().setValue(newUser);
             // Xử lý khi tạo mới thành công
             Toast.makeText(this, "Create new user successfully", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {

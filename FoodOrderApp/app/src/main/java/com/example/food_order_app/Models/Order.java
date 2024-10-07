@@ -1,38 +1,23 @@
 package com.example.food_order_app.Models;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
-@Entity(tableName = "orders")
 public class Order {
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "order_id")
     private int orderId;
 
-    @ColumnInfo(name = "user_id")
     private int userId;
 
-    @ColumnInfo(name = "order_date")
     private String orderDate;
 
-    @ColumnInfo(name = "order_total")
     private double orderTotal;
 
-    @ColumnInfo(name = "order_status")
     private String orderStatus;
 
-    @ColumnInfo(name = "order_address")
     private String orderAddress;
 
-    @ColumnInfo(name = "order_phone")
     private String orderPhone;
 
-    @ColumnInfo(name = "order_note")
     private String orderNote;
 
-    @ColumnInfo(name = "total_price")
     private double totalPrice;
 
 

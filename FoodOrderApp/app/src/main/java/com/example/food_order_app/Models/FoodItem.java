@@ -1,40 +1,19 @@
 package com.example.food_order_app.Models;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+public class FoodItem {
 
-import java.io.Serializable;
+    private String foodId;
 
-@Entity(tableName = "food_items")
-public class FoodItem implements Serializable {
-
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "food_id")
-    private int foodId;
-
-    @ColumnInfo(name = "food_category")
     private String category;
-
-    @ColumnInfo(name = "food_name")
     private String name;
 
-    @ColumnInfo(name = "food_price")
     private double price;
 
-    @ColumnInfo(name = "food_description")
     private String description;
-
-    @ColumnInfo(name = "food_image")
     private String image;
-
-    @ColumnInfo(name = "food_status")
     private boolean status;
-
-    @ColumnInfo(name = "food_quantity")
     private int quantity;
 
-    @ColumnInfo(name = "food_rating")
     private double rating;
 
     public FoodItem() {
@@ -67,11 +46,11 @@ public class FoodItem implements Serializable {
         this.description = description;
     }
 
-    public int getFoodId() {
+    public String getFoodId() {
         return foodId;
     }
 
-    public void setFoodId(int foodId) {
+    public void setFoodId(String foodId) {
         this.foodId = foodId;
     }
 

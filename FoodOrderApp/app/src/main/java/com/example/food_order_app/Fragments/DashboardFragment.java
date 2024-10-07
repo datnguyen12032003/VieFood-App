@@ -14,11 +14,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.example.food_order_app.Activities.AddNewFoodActivity;
 import com.example.food_order_app.Adapters.FoodItemDashBoardAdapter;
-import com.example.food_order_app.Database.AppDatabase;
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.R;
 import com.google.firebase.database.DataSnapshot;
@@ -68,6 +68,7 @@ public class DashboardFragment extends Fragment {
             @Override
             public void onEditClick(FoodItem foodItem) {
                 Toast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT).show();
+                updateFoodItem(foodItem);
             }
 
             @Override
@@ -77,6 +78,7 @@ public class DashboardFragment extends Fragment {
         });
         rcv.setAdapter(adapter);
     }
+
 
     private void setupButtonListeners() {
         btnAddNewFood.setOnClickListener(v -> {
@@ -112,6 +114,7 @@ public class DashboardFragment extends Fragment {
                 foodItemList.clear();
                 for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                     FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
+                    foodItem.setFoodId(dataSnapshot.getKey());
                     foodItemList.add(foodItem);
                 }
                 adapter.setData(foodItemList);
@@ -124,14 +127,63 @@ public class DashboardFragment extends Fragment {
         });
     }
 
+    private void updateFoodItem(FoodItem foodItem) {
+        AlertDialog.Builder dialogBuilder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_update_food_item, null);
+        dialogBuilder.setView(dialogView);
+
+        // Liên kết các trường giao diện với mã
+        EditText etFoodName = dialogView.findViewById(R.id.etFoodName);
+        EditText etDescription = dialogView.findViewById(R.id.etDescription);
+        EditText etPrice = dialogView.findViewById(R.id.etPrice);
+        EditText etQuantity = dialogView.findViewById(R.id.etQuantity);
+        Button btnUpdateFood = dialogView.findViewById(R.id.btnUpdateFood);
+
+        // Hiển thị thông tin hiện tại của món ăn
+        etFoodName.setText(foodItem.getName());
+        etDescription.setText(foodItem.getDescription());
+        etPrice.setText(String.valueOf(foodItem.getPrice()));
+        etQuantity.setText(String.valueOf(foodItem.getQuantity()));
+
+        AlertDialog dialog = dialogBuilder.create();
+        dialog.setTitle("Updating " + foodItem.getName());
+        dialog.show();
+
+        btnUpdateFood.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String newName = etFoodName.getText().toString();
+                String newDescription = etDescription.getText().toString();
+                double newPrice = Double.parseDouble(etPrice.getText().toString());
+                int newQuantity = Integer.parseInt(etQuantity.getText().toString());
+
+                // Cập nhật thông tin món ăn
+                foodItem.setName(newName);
+                foodItem.setDescription(newDescription);
+                foodItem.setPrice(newPrice);
+                foodItem.setQuantity(newQuantity);
+
+                // Cập nhật vào Firebase
+                dbFoodItems.child(foodItem.getFoodId()).setValue(foodItem).addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(getContext(), "Updated", Toast.LENGTH_SHORT).show();
+                        dialog.dismiss(); // Tắt dialog sau khi cập nhật thành công
+                        loadFoodItems(); // Tải lại danh sách sản phẩm
+                    } else {
+                        Toast.makeText(getContext(), "Failed to update", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            }
+        });
+    }
 
     public void deleteFoodItem(FoodItem foodItem) {
-      dbFoodItems.child(String.valueOf(foodItem.getFoodId())).removeValue().addOnCompleteListener(task -> {
-          if (task.isSuccessful()) {
-              Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
-          } else {
-              Toast.makeText(getContext(), "Failed to delete", Toast.LENGTH_SHORT).show();
-          }
-      });
+        dbFoodItems.child(foodItem.getFoodId()).removeValue();
+        foodItemList.remove(foodItem);
+        adapter.notifyDataSetChanged();
     }
+
+
 }
