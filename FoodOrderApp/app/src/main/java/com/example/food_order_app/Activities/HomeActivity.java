@@ -1,3 +1,4 @@
+
 package com.example.food_order_app.Activities;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,15 +12,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_home); // Đảm bảo bạn đã tạo layout cho activity này
-//
-//        // Kiểm tra nếu savedInstanceState là null thì thêm HomeFragment
-//        if (savedInstanceState == null) {
-//            Fragment homeFragment = new HomeFragment(); // Tạo instance của HomeFragment
-//            getSupportFragmentManager()
-//                    .beginTransaction()
-//                    .replace(R.id., homeFragment)
-//                    .commit();// Thay đổi ID này bằng ID của FrameLayout// Sử dụng ID của FrameLayout
-//
-//        }
+
     }
 }
+

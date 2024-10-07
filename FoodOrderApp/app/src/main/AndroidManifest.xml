@@ -22,6 +22,7 @@
             android:name=".Activities.AdminNavigationActivity"
             android:exported="false" />
         <activity
+
             android:name=".Activities.NavigationActivity"
             android:exported="false" />
         <activity
