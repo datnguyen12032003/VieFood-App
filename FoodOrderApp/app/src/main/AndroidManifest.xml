@@ -21,6 +21,7 @@
         <activity
             android:name=".Activities.AdminNavigationActivity"
             android:exported="false" />
+
         <activity
 
             android:name=".Activities.NavigationActivity"
@@ -31,9 +32,14 @@
         <activity
             android:name=".Activities.LoginActivity"
             android:exported="false" />
+        <activity android:name=".Activities.ProfileActivity"
+            android:exported="false"/>
+        <activity android:name=".Activities.EditProfileActivity"
+            android:exported="false"/>
         <activity
             android:name=".Activities.HomeActivity"
             android:exported="true" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
