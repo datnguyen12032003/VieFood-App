@@ -1,20 +1,11 @@
 package com.example.food_order_app.Models;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
-
-@Entity(tableName = "categories")
 public class Categories {
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "category_id")
     private int categoryId;
 
-    @ColumnInfo(name = "category_name")
     private String name;
 
-    @ColumnInfo(name = "food_id")
     private int foodId;
 
     public Categories() {

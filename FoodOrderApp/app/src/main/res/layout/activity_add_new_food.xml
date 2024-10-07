@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:padding="16dp"
+    android:fitsSystemWindows="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <!-- Food Name Input -->
+        <EditText
+            android:id="@+id/etFoodName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edit_text_background_add_new_food"
+            android:hint="Food Name"
+            android:inputType="text"
+            android:padding="10dp"
+            android:textColor="@android:color/black" />
+
+        <!-- Price Input -->
+        <EditText
+            android:id="@+id/etFoodPrice"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edit_text_background_add_new_food"
+            android:hint="Price"
+            android:inputType="numberDecimal"
+            android:padding="10dp"
+            android:textColor="@android:color/black" />
+
+        <!-- Quantity Input -->
+        <EditText
+            android:id="@+id/etFoodQuantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/edit_text_background_add_new_food"
+            android:hint="Quantity"
+            android:inputType="number"
+            android:padding="10dp"
+            android:textColor="@android:color/black" />
+
+        <!-- Description Input -->
+        <EditText
+            android:id="@+id/etFoodDescription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/edit_text_background_add_new_food"
+            android:hint="Description"
+            android:inputType="textMultiLine"
+            android:minLines="3"
+            android:padding="10dp"
+            android:textColor="@android:color/black" />
+
+        <!-- Category Selection -->
+        <TextView
+            android:id="@+id/textViewCategory"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:text="Select Category"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="20dp"
+            android:orientation="vertical">
+
+            <TableLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbBurger"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Burger" />
+
+                    <RadioButton
+                        android:id="@+id/rbPizza"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Pizza" />
+
+                    <RadioButton
+                        android:id="@+id/rbDishes"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Dishes" />
+                </TableRow>
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal">
+
+                    <RadioButton
+                        android:id="@+id/rbDesserts"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Desserts" />
+
+                    <RadioButton
+                        android:id="@+id/rbDrinks"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Drinks" />
+                </TableRow>
+
+            </TableLayout>
+        </RadioGroup>
+
+        <!-- Image Preview -->
+        <ImageView
+            android:id="@+id/imgPreview"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_image_placeholder"
+            android:layout_marginBottom="10dp"
+            android:contentDescription="Image preview" />
+
+        <!-- Choose Image Button -->
+        <Button
+            android:id="@+id/btnChooseImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Choose Image"
+            android:backgroundTint="@color/teal_200"
+            android:textColor="@android:color/white"
+            android:layout_marginBottom="20dp"
+            android:layout_gravity="center" />
+
+        <!-- Add Food Button -->
+        <Button
+            android:id="@+id/btnAddFood"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:backgroundTint="@color/orange"
+            android:padding="12dp"
+            android:text="Add Food"
+            android:textColor="@android:color/white" />
+
+    </LinearLayout>
+
+</ScrollView>

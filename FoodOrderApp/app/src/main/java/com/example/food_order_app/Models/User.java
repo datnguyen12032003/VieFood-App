@@ -1,45 +1,45 @@
 package com.example.food_order_app.Models;
 
-import androidx.room.ColumnInfo;
-import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 
-@Entity(tableName = "user")
 public class User {
 
-    @PrimaryKey(autoGenerate = true)
-    @ColumnInfo(name = "user_id")
-    private int userId;
+    private String userId;
 
-    @ColumnInfo(name = "user_name")
     private String userName;
 
-    @ColumnInfo(name = "user_email")
     private String userEmail;
 
-    @ColumnInfo(name = "user_phone")
     private String userPhone;
-
-    @ColumnInfo(name = "user_address")
     private String userAddress;
 
-    @ColumnInfo(name = "user_password")
     private String userPassword;
+
+    private boolean admin;
+
 
     public User() {
     }
 
-    public User(String userName, String userPassword, String userPhone, String userEmail, String userAddress) {
+    public User(boolean admin, String userAddress, String userEmail, String userName, String userPassword, String userPhone) {
+        this.admin = admin;
+        this.userAddress = userAddress;
+        this.userEmail = userEmail;
         this.userName = userName;
         this.userPassword = userPassword;
         this.userPhone = userPhone;
-        this.userEmail = userEmail;
-        this.userAddress = userAddress;
     }
 
     public User(String userEmail, String userPassword) {
         this.userEmail = userEmail;
         this.userPassword = userPassword;
+    }
+
+    public boolean isAdmin() {
+        return admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
     }
 
     public String getUserPassword() {
@@ -66,11 +66,11 @@ public class User {
         this.userEmail = userEmail;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

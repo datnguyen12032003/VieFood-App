@@ -1,5 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
+
 }
 
 android {
@@ -39,10 +41,11 @@ android {
 
 
 dependencies {
-    val room_version = "2.6.1"
+    implementation("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.12.0") // Nếu bạn sử dụng Java
 
-    implementation("androidx.room:room-runtime:$room_version")
-    annotationProcessor("androidx.room:room-compiler:$room_version")
+
+    implementation(libs.firebase.database)
     
     implementation(libs.appcompat)
     implementation(libs.material)

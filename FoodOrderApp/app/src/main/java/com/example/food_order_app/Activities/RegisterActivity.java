@@ -12,10 +12,11 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.food_order_app.Database.UserDatabase;
 import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -23,12 +24,15 @@ public class RegisterActivity extends AppCompatActivity {
     private ImageButton btnBack, btnTogglePassword;
     private EditText etUsername, etEmail, etPhone, etAddress, etPassword;
     private boolean isPasswordVisible = false; // Biến toàn cục cho trạng thái hiển thị mật khẩu
+    private DatabaseReference dbUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_register);
+
+        dbUsers = FirebaseDatabase.getInstance().getReference("Users");
 
         // Khởi tạo các thành phần UI
         btnBack = findViewById(R.id.btn_back);
@@ -59,6 +63,7 @@ public class RegisterActivity extends AppCompatActivity {
                 newUser.setUserPhone(etPhone.getText().toString());
                 newUser.setUserAddress(etAddress.getText().toString());
                 newUser.setUserPassword(etPassword.getText().toString());
+                newUser.setAdmin(false);
                 createNewUser(newUser);
             }
         });
@@ -66,7 +71,7 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void createNewUser(User newUser) {
         try {
-            UserDatabase.getInstance(this).userDao().insertUser(newUser);
+            dbUsers.push().setValue(newUser);
             // Xử lý khi tạo mới thành công
             Toast.makeText(this, "Create new user successfully", Toast.LENGTH_SHORT).show();
         } catch (Exception ex) {
