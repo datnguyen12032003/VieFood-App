@@ -1,10 +1,8 @@
 package com.example.food_order_app.Adapters;
 
-import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,6 +23,7 @@ public class FoodItemDashBoardAdapter extends RecyclerView.Adapter<FoodItemDashB
 
     public interface OnItemClickListener {
         void onEditClick(FoodItem foodItem);
+
         void onDeleteClick(FoodItem foodItem);
     }
 
@@ -51,9 +50,7 @@ public class FoodItemDashBoardAdapter extends RecyclerView.Adapter<FoodItemDashB
         if (newFoodItem == null) {
             return;
         }
-
-        Glide.with(holder.itemView.getContext()).load(newFoodItem.getImage()).placeholder(R.drawable.ic_image_placeholder).into(holder.foodImage);
-
+        Glide.with(holder.itemView.getContext()).load(newFoodItem.getImage()).error(R.drawable.ic_image_placeholder).into(holder.foodImage);
         holder.foodName.setText(newFoodItem.getName());
         holder.foodDescription.setText(newFoodItem.getDescription());
         holder.foodPrice.setText(String.format("$%.2f", newFoodItem.getPrice()));
