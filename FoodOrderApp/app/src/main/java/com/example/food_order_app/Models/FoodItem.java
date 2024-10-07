@@ -2,6 +2,7 @@ package com.example.food_order_app.Models;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "food_items")
@@ -20,24 +21,14 @@ public class FoodItem {
     @ColumnInfo(name = "food_price")
     private double price;
 
-    @ColumnInfo(name = "food_description")
-    private String description;
-
-    @ColumnInfo(name = "food_image")
-    private String image;
-
-    @ColumnInfo(name = "food_status")
-    private boolean status;
-
-    @ColumnInfo(name = "food_quantity")
-    private int quantity;
-
-    @ColumnInfo(name = "food_rating")
-    private double rating;
-
-    public FoodItem() {
+    // Constructor đơn giản bị đánh dấu @Ignore
+    @Ignore
+    public FoodItem(String name, double price) {
+        this.name = name;
+        this.price = price;
     }
 
+    // Constructor đầy đủ cho Room
     public FoodItem(boolean status, double rating, int quantity, double price, String name, String image, String description, int categoryId) {
         this.status = status;
         this.rating = rating;
@@ -49,22 +40,7 @@ public class FoodItem {
         this.categoryId = categoryId;
     }
 
-    public int getCategoryId() {
-        return categoryId;
-    }
-
-    public void setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
+    // Getter và setter cho các trường
     public int getFoodId() {
         return foodId;
     }
@@ -73,12 +49,12 @@ public class FoodItem {
         this.foodId = foodId;
     }
 
-    public String getImage() {
-        return image;
+    public int getCategoryId() {
+        return categoryId;
     }
 
-    public void setImage(String image) {
-        this.image = image;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public String getName() {
@@ -97,6 +73,46 @@ public class FoodItem {
         this.price = price;
     }
 
+    // Các trường bổ sung
+    @ColumnInfo(name = "food_description")
+    private String description;
+
+    @ColumnInfo(name = "food_image")
+    private String image;
+
+    @ColumnInfo(name = "food_status")
+    private boolean status;
+
+    @ColumnInfo(name = "food_quantity")
+    private int quantity;
+
+    @ColumnInfo(name = "food_rating")
+    private double rating;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
     public int getQuantity() {
         return quantity;
     }
@@ -111,13 +127,5 @@ public class FoodItem {
 
     public void setRating(double rating) {
         this.rating = rating;
-    }
-
-    public boolean isStatus() {
-        return status;
-    }
-
-    public void setStatus(boolean status) {
-        this.status = status;
     }
 }

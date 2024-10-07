@@ -1,66 +1,54 @@
 package com.example.food_order_app.Fragments;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.food_order_app.R;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link HomeFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class HomeFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_home, container, false);
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+        // Tìm các button và thiết lập sự kiện bấm
+        Button btnDishes = view.findViewById(R.id.btnDishes);
+        Button btnPizza = view.findViewById(R.id.btnPizza);
+        Button btnBurger = view.findViewById(R.id.btnBurger);
+        Button btnDrink = view.findViewById(R.id.btnDrink);
+        Button btnDessert = view.findViewById(R.id.btnDessert);
 
-    public HomeFragment() {
-        // Required empty public constructor
+        // Thiết lập sự kiện bấm cho từng button để mở MenuFragment với danh mục tương ứng
+        btnDishes.setOnClickListener(v -> openMenuFragment("Dishes"));
+        btnPizza.setOnClickListener(v -> openMenuFragment("Pizza"));
+        btnBurger.setOnClickListener(v -> openMenuFragment("Burger"));
+        btnDrink.setOnClickListener(v -> openMenuFragment("Drinks"));
+        btnDessert.setOnClickListener(v -> openMenuFragment("Desserts"));
+
+        return view;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment HomeFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static HomeFragment newInstance(String param1, String param2) {
-        HomeFragment fragment = new HomeFragment();
+    // Phương thức để mở MenuFragment và truyền danh mục món ăn
+    private void openMenuFragment(String category) {
+        // Tạo đối tượng MenuFragment và truyền tham số
+        MenuFragment menuFragment = new MenuFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
+        args.putString("category", category);  // Truyền danh mục món ăn
+        menuFragment.setArguments(args);
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false);
+        // Thay thế fragment hiện tại bằng MenuFragment
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, menuFragment);
+        transaction.addToBackStack(null);  // Để có thể quay lại fragment trước đó
+        transaction.commit();
     }
 }
