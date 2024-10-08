@@ -11,7 +11,6 @@ import com.example.food_order_app.Fragments.CartFragment;
 import com.example.food_order_app.Fragments.HomeFragment;
 import com.example.food_order_app.Fragments.MenuFragment;
 import com.example.food_order_app.Fragments.ProfileFragment;
-import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.R;
 import com.example.food_order_app.databinding.ActivityNavigationBinding;
 

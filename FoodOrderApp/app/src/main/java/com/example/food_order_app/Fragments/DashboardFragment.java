@@ -13,8 +13,11 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.food_order_app.Activities.AddNewFoodActivity;
@@ -37,6 +40,7 @@ public class DashboardFragment extends Fragment {
     private FoodItemDashBoardAdapter adapter;
     private List<FoodItem> foodItemList;
     private Button btnAddNewFood;
+    private Spinner spinnerCategory;
 
     private DatabaseReference dbFoodItems;
 
@@ -133,12 +137,23 @@ public class DashboardFragment extends Fragment {
         View dialogView = inflater.inflate(R.layout.dialog_update_food_item, null);
         dialogBuilder.setView(dialogView);
 
+
         // Liên kết các trường giao diện với mã
         EditText etFoodName = dialogView.findViewById(R.id.etFoodName);
         EditText etDescription = dialogView.findViewById(R.id.etDescription);
         EditText etPrice = dialogView.findViewById(R.id.etPrice);
         EditText etQuantity = dialogView.findViewById(R.id.etQuantity);
+
         Button btnUpdateFood = dialogView.findViewById(R.id.btnUpdateFood);
+        Spinner spinnerCategory = dialogView.findViewById(R.id.spinnerCategory);
+
+
+        // Tạo danh sách danh mục cho Spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getContext(),
+                R.array.food_categories, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(adapter);
+        spinnerCategory.setSelection(adapter.getPosition(foodItem.getCategory()));
 
         // Hiển thị thông tin hiện tại của món ăn
         etFoodName.setText(foodItem.getName());
@@ -150,6 +165,22 @@ public class DashboardFragment extends Fragment {
         dialog.setTitle("Updating " + foodItem.getName());
         dialog.show();
 
+
+//        String category;
+//        // Xử lý sự kiện chọn danh mục
+//        spinnerCategory.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                category = parent.getItemAtPosition(position).toString();
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                category = ""; // Hoặc thiết lập giá trị mặc định
+//            }
+//        });
+
+
         btnUpdateFood.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -157,12 +188,13 @@ public class DashboardFragment extends Fragment {
                 String newDescription = etDescription.getText().toString();
                 double newPrice = Double.parseDouble(etPrice.getText().toString());
                 int newQuantity = Integer.parseInt(etQuantity.getText().toString());
-
+                String newCategory = spinnerCategory.getSelectedItem().toString();
                 // Cập nhật thông tin món ăn
                 foodItem.setName(newName);
                 foodItem.setDescription(newDescription);
                 foodItem.setPrice(newPrice);
                 foodItem.setQuantity(newQuantity);
+                foodItem.setCategory(newCategory);
 
                 // Cập nhật vào Firebase
                 dbFoodItems.child(foodItem.getFoodId()).setValue(foodItem).addOnCompleteListener(task -> {

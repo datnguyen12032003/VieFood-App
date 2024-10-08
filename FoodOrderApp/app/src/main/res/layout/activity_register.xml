@@ -10,34 +10,25 @@
     tools:context=".Activities.RegisterActivity">
 
     <!-- Title -->
-    <TextView
-        android:id="@+id/welcome_title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
-        android:text="Welcome to VieFood"
-        android:textColor="@android:color/black"
-        android:textSize="30sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- Create an account title -->
+
+    <!-- Instruction text -->
+
     <TextView
         android:id="@+id/create_account_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="48dp"
         android:text="Create an account"
         android:textColor="@android:color/black"
         android:textSize="25sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/welcome_title" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- Instruction text -->
     <TextView
         android:id="@+id/instruction_text"
         android:layout_width="wrap_content"
@@ -54,11 +45,12 @@
         android:id="@+id/txt_username"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="36dp"
         android:background="@drawable/edit_text_background"
         android:hint="Username"
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.487"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/instruction_text"
         app:layout_constraintWidth_percent="0.9" />
@@ -89,19 +81,6 @@
         app:layout_constraintTop_toBottomOf="@id/txt_email"
         app:layout_constraintWidth_percent="0.9" />
 
-    <EditText
-        android:id="@+id/txt_address"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:background="@drawable/edit_text_background"
-        android:hint="Address"
-        android:padding="16dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_phone"
-        app:layout_constraintWidth_percent="0.9" />
-
     <!-- Password Input -->
     <EditText
         android:id="@+id/txt_password"
@@ -115,7 +94,7 @@
         android:padding="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_address"
+        app:layout_constraintTop_toBottomOf="@id/txt_phone"
         app:layout_constraintWidth_percent="0.9" />
 
     <ImageButton
@@ -129,6 +108,49 @@
         app:layout_constraintEnd_toEndOf="@id/txt_password"
         app:layout_constraintTop_toTopOf="@id/txt_password" />
 
+    <!-- Confirm Password Input -->
+    <EditText
+        android:id="@+id/txt_confirm_password"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edit_text_background"
+        android:drawablePadding="8dp"
+        android:hint="Confirm Password"
+        android:inputType="textPassword"
+        android:padding="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_password"
+        app:layout_constraintWidth_percent="0.9" />
+
+    <ImageButton
+        android:id="@+id/btn_toggle_confirm_password"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:background="@null"
+        android:src="@drawable/ic_visibility_off"
+        app:layout_constraintEnd_toEndOf="@id/txt_confirm_password"
+        app:layout_constraintTop_toTopOf="@id/txt_confirm_password" />
+
+    <!-- Address Input -->
+    <EditText
+        android:id="@+id/txt_address"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/edit_text_background"
+        android:hint="Address"
+        android:padding="16dp"
+        android:inputType="textMultiLine"
+        android:minLines="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/txt_confirm_password"
+        app:layout_constraintWidth_percent="0.9" />
+
     <Button
         android:id="@+id/btn_create_account"
         android:layout_width="0dp"
@@ -140,7 +162,7 @@
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/txt_password"
+        app:layout_constraintTop_toBottomOf="@id/txt_address"
         app:layout_constraintWidth_percent="0.9" />
 
     <ImageButton
