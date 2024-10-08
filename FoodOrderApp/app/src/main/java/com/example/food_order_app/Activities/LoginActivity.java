@@ -8,7 +8,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -26,13 +25,14 @@ public class LoginActivity extends AppCompatActivity {
     private Button btnLogin;
     private ImageButton btnBack, btnTogglePassword;
     private EditText etEmail, etPassword;
-    private boolean isPasswordVisible = false; // Biến toàn cục cho trạng thái hiển thị mật khẩu
+    private boolean isPasswordVisible = false;
     private DatabaseReference dbUsers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
+
+
         setContentView(R.layout.activity_login);
 
         dbUsers = FirebaseDatabase.getInstance().getReference("Users");
@@ -43,63 +43,80 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.txt_password);
         btnTogglePassword = findViewById(R.id.btn_toggle_password);
 
-        // Thiết lập sự kiện nhấn nút quay lại
-        btnBack.setOnClickListener(view -> {
-            Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-            startActivity(intent);
-        });
+        // Nút quay lại
+        btnBack.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, MainActivity.class)));
 
-        // Thiết lập sự kiện nhấn nút ẩn hiện mật khẩu
+        // Nút ẩn/hiện mật khẩu
         btnTogglePassword.setOnClickListener(view -> togglePasswordVisibility());
 
-        // Thiết lập sự kiện nhấn nút đăng nhập
-        btnLogin.setOnClickListener(view -> {
-            // Xử lý đăng nhập ở đây
-            String email = etEmail.getText().toString();
-            String password = etPassword.getText().toString();
+        // Nút đăng nhập
+        btnLogin.setOnClickListener(view -> validateLogin());
+    }
+
+    private void validateLogin() {
+        String email = etEmail.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Please enter your email", Toast.LENGTH_SHORT).show();
+        } else if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Please enter a valid email", Toast.LENGTH_SHORT).show();
+        } else if (password.isEmpty()) {
+            Toast.makeText(this, "Please enter your password", Toast.LENGTH_SHORT).show();
+        } else if (password.length() < 6) {
+            Toast.makeText(this, "Password must be at least 6 characters", Toast.LENGTH_SHORT).show();
+        } else {
             User user = new User(email, password);
             login(user);
-        });
+        }
     }
 
     private void login(User user) {
-        try {
-            dbUsers.addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                        if (dataSnapshot.child("userEmail").getValue().equals(user.getUserEmail()) &&
-                                dataSnapshot.child("userPassword").getValue().equals(user.getUserPassword())) {
+        dbUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean isLoggedIn = false;
+                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                    String emailInDb = dataSnapshot.child("userEmail").getValue(String.class);
+                    String passwordInDb = dataSnapshot.child("userPassword").getValue(String.class);
+                    if (user.getUserEmail().equals(emailInDb) && user.getUserPassword().equals(passwordInDb)) {
+                        String userId = dataSnapshot.getKey();
+                        boolean isAdmin = dataSnapshot.child("admin").getValue(Boolean.class);
 
-                            // cho để ké chỗ này lấy id cho profile nkaaa <3
-                            String userId = dataSnapshot.getKey();
-                            getSharedPreferences("user_prefs", MODE_PRIVATE)
-                                    .edit()
-                                    .putString("current_user_id", userId)
-                                    .apply();
+                        getSharedPreferences("user_prefs", MODE_PRIVATE)
+                                .edit()
+                                .putString("current_user_id", userId)
+                                .putBoolean("admin", isAdmin)
+                                .apply();
 
-                            if (dataSnapshot.child("admin").getValue().equals(true)) {
-                                Intent intent = new Intent(LoginActivity.this, AdminNavigationActivity.class);
-                                startActivity(intent);
-                                Toast.makeText(LoginActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
-                            } else {
-                                Intent intent = new Intent(LoginActivity.this, NavigationActivity.class);
-                                startActivity(intent);
-                                Toast.makeText(LoginActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
-                            }
-                        }
+                        redirectToAppropriateActivity(isAdmin);
+                        isLoggedIn = true;
+                        break;
                     }
                 }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+                if (!isLoggedIn) {
+                    Toast.makeText(LoginActivity.this, "Invalid email or password", Toast.LENGTH_SHORT).show();
                 }
-            });
+            }
 
-        } catch (Exception ex) {
-            Toast.makeText(this, "Login failed", Toast.LENGTH_SHORT).show();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void redirectToAppropriateActivity(boolean isAdmin) {
+        Intent intent;
+        if (isAdmin) {
+            intent = new Intent(LoginActivity.this, AdminNavigationActivity.class);
+        } else {
+            intent = new Intent(LoginActivity.this, NavigationActivity.class);
         }
+        startActivity(intent);
+        finish();
+        Toast.makeText(LoginActivity.this, "Login successfully", Toast.LENGTH_SHORT).show();
     }
 
     private void togglePasswordVisibility() {
@@ -108,9 +125,9 @@ public class LoginActivity extends AppCompatActivity {
             btnTogglePassword.setImageResource(R.drawable.ic_visibility_off);
         } else {
             etPassword.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD);
-            btnTogglePassword.setImageResource(R.drawable.ic_visibility); // Thay đổi icon
+            btnTogglePassword.setImageResource(R.drawable.ic_visibility);
         }
-        etPassword.setSelection(etPassword.length()); // Đưa con trỏ về cuối
-        isPasswordVisible = !isPasswordVisible; // Đổi trạng thái
+        etPassword.setSelection(etPassword.length());
+        isPasswordVisible = !isPasswordVisible;
     }
 }

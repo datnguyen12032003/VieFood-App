@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.food_order_app.Fragments.DashboardFragment;
+import com.example.food_order_app.Fragments.ProfileFragment;
+import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.R;
 import com.example.food_order_app.databinding.ActivityAdminNavigationBinding;
 
@@ -35,8 +37,10 @@ public class AdminNavigationActivity extends AppCompatActivity {
                 case R.id.menu:
                     return true;
                 case R.id.profile:
+                    openFragment(new ProfileFragment());
                     return true;
                 case R.id.logout:
+                    logout();
                     return true;
                 default:
                     return false;
@@ -45,11 +49,22 @@ public class AdminNavigationActivity extends AppCompatActivity {
         });
     }
 
+    private void logout() {
+        // Xóa thông tin đăng nhập từ SharedPreferences
+        getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .edit()
+                .remove("current_user_id") // Xóa ID người dùng đã lưu
+                .remove("admin") // Xóa trạng thái admin
+                .apply();
+        // Chuyển hướng đến màn hình đăng nhập
+        Intent intent = new Intent(AdminNavigationActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
+
     private void openFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.frame_layout_bottom_navigation, fragment)
                 .commit();
     }
-
-
 }

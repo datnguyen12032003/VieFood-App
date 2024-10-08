@@ -6,12 +6,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.bumptech.glide.Glide;
 import com.example.food_order_app.Activities.ProfileActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
@@ -26,6 +28,7 @@ public class ProfileFragment extends Fragment {
     private TextView userNameTextView;
     private TextView userPhoneTextView;
     private DatabaseReference dbUsers;
+    private ImageView imageAvatar;
 
     public ProfileFragment() {
     }
@@ -42,6 +45,7 @@ public class ProfileFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_profile, container, false);
         userNameTextView = view.findViewById(R.id.userName);
         userPhoneTextView = view.findViewById(R.id.userPhone);
+        imageAvatar = view.findViewById(R.id.profileImage);
         Button btnEditProfile = view.findViewById(R.id.btnEditProfile);
         fetchUserData();
         btnEditProfile.setOnClickListener(v -> {
@@ -55,8 +59,8 @@ public class ProfileFragment extends Fragment {
 
         String userId = getActivity().getSharedPreferences("user_prefs", getActivity().MODE_PRIVATE)
                 .getString("current_user_id", null);
-        if (userId != null) {
 
+        if (userId != null) {
             dbUsers.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -65,6 +69,7 @@ public class ProfileFragment extends Fragment {
                         if (currentUser != null) {
                             userNameTextView.setText(currentUser.getUserName());
                             userPhoneTextView.setText(currentUser.getUserPhone());
+                            Glide.with(getActivity()).load(currentUser.getAvatarUrl()).error(R.drawable.ic_image_placeholder).into(imageAvatar);
                         } else {
                             showToast("User not found");
                         }
@@ -72,7 +77,6 @@ public class ProfileFragment extends Fragment {
                         showToast("User not found");
                     }
                 }
-
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     showToast("Failed to fetch user data");
