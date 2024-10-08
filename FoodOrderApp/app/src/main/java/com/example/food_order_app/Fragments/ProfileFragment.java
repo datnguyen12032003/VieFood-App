@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.food_order_app.Activities.ChangePasswordActivity;
 import com.example.food_order_app.Activities.ProfileActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
@@ -46,10 +47,17 @@ public class ProfileFragment extends Fragment {
         userNameTextView = view.findViewById(R.id.userName);
         userPhoneTextView = view.findViewById(R.id.userPhone);
         imageAvatar = view.findViewById(R.id.profileImage);
+        Button btnChangePassword = view.findViewById(R.id.btnChangePassword);
         Button btnEditProfile = view.findViewById(R.id.btnEditProfile);
         fetchUserData();
         btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ProfileActivity.class);
+            startActivity(intent);
+        });
+
+
+        btnChangePassword.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
             startActivity(intent);
         });
         return view;
