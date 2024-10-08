@@ -1,5 +1,6 @@
 package com.example.food_order_app.Activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,7 @@ import com.example.food_order_app.Fragments.CartFragment;
 import com.example.food_order_app.Fragments.HomeFragment;
 import com.example.food_order_app.Fragments.MenuFragment;
 import com.example.food_order_app.Fragments.ProfileFragment;
+import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.R;
 import com.example.food_order_app.databinding.ActivityNavigationBinding;
 
@@ -42,6 +44,7 @@ public class NavigationActivity extends AppCompatActivity {
                     openFragment(new ProfileFragment());
                     return true;
                 case R.id.logout:
+                    logout();
                     return true;
                 default:
                     return false;
@@ -55,4 +58,16 @@ public class NavigationActivity extends AppCompatActivity {
                 .commit();
     }
 
+    private void logout() {
+        // Xóa thông tin đăng nhập từ SharedPreferences
+        getSharedPreferences("user_prefs", MODE_PRIVATE)
+                .edit()
+                .remove("current_user_id") // Xóa ID người dùng đã lưu
+                .remove("admin") // Xóa trạng thái admin
+                .apply();
+        // Chuyển hướng đến màn hình đăng nhập
+        Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
+    }
 }

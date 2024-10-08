@@ -80,7 +80,7 @@ public class AddNewFoodActivity extends AppCompatActivity {
             progressDialog.setMessage("Uploading...");
             progressDialog.show();
 
-            storageReference = FirebaseStorage.getInstance().getReference();
+            storageReference = FirebaseStorage.getInstance().getReference("foods");
             StorageReference fileReference = storageReference.child(System.currentTimeMillis() + ".jpg");
             fileReference.putFile(imageUri).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                 @Override

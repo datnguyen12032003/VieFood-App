@@ -14,6 +14,8 @@ public class User {
 
     private String userPassword;
 
+    private String avatarUrl;
+
     private boolean admin;
 
 
@@ -27,7 +29,9 @@ public class User {
         this.userName = userName;
         this.userPassword = userPassword;
         this.userPhone = userPhone;
+        avatarUrl = "";
     }
+
 
     public User(String userEmail, String userPassword) {
         this.userEmail = userEmail;
@@ -38,6 +42,14 @@ public class User {
         this.userName = userName;
         this.userPhone = userPhone;
         this.userAddress = userAddress;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
     }
 
     public boolean isAdmin() {
