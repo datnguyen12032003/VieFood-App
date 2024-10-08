@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
 import com.google.firebase.database.DataSnapshot;

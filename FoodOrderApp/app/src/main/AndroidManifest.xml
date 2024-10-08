@@ -27,7 +27,6 @@
             android:exported="false" />
 
         <activity
-
             android:name=".Activities.NavigationActivity"
             android:exported="false" />
         <activity
@@ -45,7 +44,7 @@
             android:exported="true" />
 
         <activity
-            android:name=".MainActivity"
+            android:name=".Activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

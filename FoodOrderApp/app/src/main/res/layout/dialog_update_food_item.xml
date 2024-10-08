@@ -33,6 +33,15 @@
         android:hint="Quantity"
         android:inputType="number" />
 
+
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/edit_text_background_add_new_food"
+        android:spinnerMode="dropdown" />
+
     <EditText
         android:id="@+id/etDescription"
         android:layout_width="match_parent"

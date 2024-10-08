@@ -1,18 +1,14 @@
-package com.example.food_order_app;
+package com.example.food_order_app.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.food_order_app.Activities.AdminNavigationActivity;
-import com.example.food_order_app.Activities.LoginActivity;
-import com.example.food_order_app.Activities.NavigationActivity;
-import com.example.food_order_app.Activities.RegisterActivity;
+import com.example.food_order_app.R;
 
 public class MainActivity extends AppCompatActivity {
 

@@ -3,13 +3,11 @@ package com.example.food_order_app.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.food_order_app.Fragments.DashboardFragment;
 import com.example.food_order_app.Fragments.ProfileFragment;
-import com.example.food_order_app.MainActivity;
 import com.example.food_order_app.R;
 import com.example.food_order_app.databinding.ActivityAdminNavigationBinding;
 
