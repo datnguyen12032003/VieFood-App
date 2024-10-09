@@ -18,11 +18,13 @@ public class User {
 
     private boolean admin;
 
+    private String userOtp;
+    private long otpCreationTime;
 
     public User() {
     }
 
-    public User(boolean admin, String userAddress, String userEmail, String userName, String userPassword, String userPhone) {
+    public User(boolean admin, String userAddress, String userEmail, String userName, String userPassword, String userPhone, String userOtp) {
         this.admin = admin;
         this.userAddress = userAddress;
         this.userEmail = userEmail;
@@ -30,6 +32,7 @@ public class User {
         this.userPassword = userPassword;
         this.userPhone = userPhone;
         avatarUrl = "";
+        this.userOtp = userOtp;
     }
 
 
@@ -106,5 +109,21 @@ public class User {
 
     public void setUserPhone(String userPhone) {
         this.userPhone = userPhone;
+    }
+
+    public String getUserOtp() {
+        return userOtp;
+    }
+
+    public void setUserOtp(String userOtp) {
+        this.userOtp = userOtp;
+    }
+
+    public long getOtpCreationTime() {
+        return otpCreationTime;
+    }
+
+    public void setOtpCreationTime(long otpCreationTime) {
+        this.otpCreationTime = otpCreationTime;
     }
 }

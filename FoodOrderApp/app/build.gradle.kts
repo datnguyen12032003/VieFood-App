@@ -46,9 +46,9 @@ dependencies {
     implementation("androidx.gridlayout:gridlayout:1.0.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.12.0") // Nếu bạn sử dụng Java
     implementation ("com.google.firebase:firebase-storage:20.2.0")
-
     implementation(libs.firebase.database)
-    
+    implementation("com.sun.mail:android-mail:1.6.2")
+    implementation ("com.sun.mail:android-activation:1.6.2")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
