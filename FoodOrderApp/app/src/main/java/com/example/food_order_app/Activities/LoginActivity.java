@@ -6,6 +6,7 @@ import android.text.InputType;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -50,6 +51,12 @@ public class LoginActivity extends AppCompatActivity {
 
         // Nút đăng nhập
         btnLogin.setOnClickListener(view -> validateLogin());
+
+        TextView txtForgotPassword = findViewById(R.id.txt_forgot_password);
+        txtForgotPassword.setOnClickListener(view -> {
+            Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void validateLogin() {
