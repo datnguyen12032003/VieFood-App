@@ -6,11 +6,13 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
@@ -19,6 +21,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import android.os.CountDownTimer;
 
 public class ResetPasswordActivity extends AppCompatActivity {
 
@@ -26,6 +29,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private Button btnUpdatePassword;
     private String receivedOtp;
     private DatabaseReference dbUsers;
+    private TextView tvTimer;
+    private long otpExpiryDuration = 5 * 60 * 1000;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -36,15 +42,19 @@ public class ResetPasswordActivity extends AppCompatActivity {
         txtNewPassword = findViewById(R.id.txt_new_password);
         txtConfirmPassword = findViewById(R.id.txt_confirm_password);
         btnUpdatePassword = findViewById(R.id.btn_update_password);
+        tvTimer = findViewById(R.id.tv_timer);
+
         dbUsers = FirebaseDatabase.getInstance().getReference("Users");
 
         receivedOtp = getIntent().getStringExtra("otp");
 
         ImageButton btnBack = findViewById(R.id.btn_back);
+
+        startOtpCountdown();
+
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Quay lại màn hình trước đó
                 finish();
             }
         });
@@ -69,6 +79,25 @@ public class ResetPasswordActivity extends AppCompatActivity {
         });
     }
 
+    private void startOtpCountdown() {
+        new CountDownTimer(otpExpiryDuration, 1000) {
+
+            public void onTick(long millisUntilFinished) {
+                long minutes = (millisUntilFinished / 1000) / 60;
+                long seconds = (millisUntilFinished / 1000) % 60;
+                tvTimer.setText(String.format("%02d:%02d", minutes, seconds));
+            }
+
+            public void onFinish() {
+                tvTimer.setText("OTP expired");
+                Toast.makeText(ResetPasswordActivity.this, "OTP has expired. Please request a new one.", Toast.LENGTH_SHORT).show();
+                btnUpdatePassword.setEnabled(false);
+                btnUpdatePassword.setBackgroundTintList(ContextCompat.getColorStateList(ResetPasswordActivity.this, R.color.dark_gray));
+
+            }
+        }.start();
+    }
+
     private void checkOtpExpiryAndUpdatePassword(String newPassword) {
         String email = getIntent().getStringExtra("email");
         dbUsers.orderByChild("userEmail").equalTo(email).addListenerForSingleValueEvent(new ValueEventListener() {
@@ -78,7 +107,6 @@ public class ResetPasswordActivity extends AppCompatActivity {
                     for (DataSnapshot userSnapshot : snapshot.getChildren()) {
                         User user = userSnapshot.getValue(User.class);
                         if (user != null) {
-                            // Kiểm tra OTP có hợp lệ và chưa hết hạn
                             if (user.getUserOtp() != null && user.getUserOtp().equals(receivedOtp)) {
                                 if (isOtpExpired(user)) {
                                     Toast.makeText(ResetPasswordActivity.this, "OTP has expired. Please request a new one.", Toast.LENGTH_SHORT).show();
