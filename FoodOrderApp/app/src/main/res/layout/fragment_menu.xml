@@ -65,7 +65,7 @@
     </HorizontalScrollView>
 
     <EditText
-        android:id="@+id/editTextText"
+        android:id="@+id/txt_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"

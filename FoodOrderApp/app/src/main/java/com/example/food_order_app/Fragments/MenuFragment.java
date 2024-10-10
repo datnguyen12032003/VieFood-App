@@ -11,10 +11,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,6 +44,7 @@ public class MenuFragment extends Fragment {
     private Button btn_dishes, btn_pizza, btn_burger, btn_drinks, btn_dessert;
     private TextView txt_title;
     private ProgressBar progressBar;
+    private EditText txt_search;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -114,12 +118,41 @@ public class MenuFragment extends Fragment {
         btn_dessert = v.findViewById(R.id.btn_dessert);
         txt_title = v.findViewById(R.id.txt_title);
         progressBar = v.findViewById(R.id.progress_bar);
+        txt_search = v.findViewById(R.id.txt_search);
+
+        txt_search.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                filterFoodItemsBySearch(charSequence.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
 
         btn_dishes.setOnClickListener(v1 -> selectCategory("Dishes"));
         btn_pizza.setOnClickListener(v1 -> selectCategory("Pizza"));
         btn_burger.setOnClickListener(v1 -> selectCategory("Burger"));
         btn_drinks.setOnClickListener(v1 -> selectCategory("Drinks"));
         btn_dessert.setOnClickListener(v1 -> selectCategory("Dessert"));
+    }
+
+    private void filterFoodItemsBySearch(String string) {
+        List<FoodItem> filteredList = new ArrayList<>();
+        for (FoodItem foodItem : foodItemList) {
+            // Kiểm tra xem tên món ăn có chứa từ khóa tìm kiếm hay không
+            if (foodItem.getName().toLowerCase().contains(string.toLowerCase())) {
+                filteredList.add(foodItem);
+            }
+        }
+        adapter.setData(filteredList);
     }
 
     private void selectCategory(String category) {
