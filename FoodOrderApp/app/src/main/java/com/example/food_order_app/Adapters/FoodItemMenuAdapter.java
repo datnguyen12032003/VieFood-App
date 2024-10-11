@@ -1,16 +1,19 @@
 package com.example.food_order_app.Adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.food_order_app.Activities.FoodDetailActivity;
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.R;
 
@@ -53,11 +56,35 @@ public class FoodItemMenuAdapter extends RecyclerView.Adapter<FoodItemMenuAdapte
         holder.foodDescription.setText(foodItem.getDescription());
         holder.foodPrice.setText(String.format("$%.2f", foodItem.getPrice()));
         holder.foodRating.setText(String.format("★ %.1f", foodItem.getRating()));
-        //Xử lý sự kiện nút "Add"
-        holder.btnAdd.setOnClickListener(new View.OnClickListener() {
+        if (foodItem.getQuantity() > 0) {
+            holder.btnAdd.setAlpha(1.0f);
+            //Xử lý sự kiện nút "Add"
+            holder.btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onAddClick(foodItem);
+                }
+            });
+        } else {
+            holder.btnAdd.setAlpha(0.5f);
+            holder.btnAdd.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(holder.itemView.getContext(), "Out of stock", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+
             @Override
-            public void onClick(View v) {
-                onItemClickListener.onAddClick(foodItem);
+            public void onClick(View view) {
+                Intent intent = new Intent(holder.itemView.getContext(), FoodDetailActivity.class);
+                String foodId = foodItem.getFoodId();
+                intent.putExtra("foodId", foodId);
+                intent.putExtra("foodPrice", foodItem.getPrice());
+
+                holder.itemView.getContext().startActivity(intent);
             }
         });
     }
