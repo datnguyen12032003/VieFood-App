@@ -3,6 +3,7 @@ package com.example.food_order_app.Activities;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment; // Thêm dòng này
 
@@ -27,7 +28,7 @@ public class NavigationActivity extends AppCompatActivity {
         openFragment(new HomeFragment());
         // Đặt item mặc định là Home
         binding.bottomNavigationView.setSelectedItemId(R.id.home);
-        
+
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home:
@@ -58,15 +59,21 @@ public class NavigationActivity extends AppCompatActivity {
     }
 
     private void logout() {
-        // Xóa thông tin đăng nhập từ SharedPreferences
-        getSharedPreferences("user_prefs", MODE_PRIVATE)
-                .edit()
-                .remove("current_user_id") // Xóa ID người dùng đã lưu
-                .remove("admin") // Xóa trạng thái admin
-                .apply();
-        // Chuyển hướng đến màn hình đăng nhập
-        Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        new AlertDialog.Builder(this)
+                .setTitle("Logout")
+                .setMessage("Are you sure you want to delete?")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    // Xóa thông tin đăng nhập từ SharedPreferences
+                    getSharedPreferences("user_prefs", MODE_PRIVATE)
+                            .edit()
+                            .remove("current_user_id") // Xóa ID người dùng đã lưu
+                            .remove("admin") // Xóa trạng thái admin
+                            .apply();
+                    // Chuyển hướng đến màn hình đăng nhập
+                    Intent intent = new Intent(NavigationActivity.this, MainActivity.class);
+                    startActivity(intent);
+                    finish();
+                }).setNegativeButton("No", (dialog, which) -> dialog.dismiss()).show();
     }
+
 }

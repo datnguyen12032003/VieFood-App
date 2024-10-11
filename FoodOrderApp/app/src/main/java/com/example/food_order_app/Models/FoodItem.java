@@ -30,6 +30,8 @@ public class FoodItem {
         this.status = status;
     }
 
+
+
     public String getCategory() {
         return category;
     }

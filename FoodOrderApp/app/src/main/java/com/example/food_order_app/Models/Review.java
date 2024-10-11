@@ -1,24 +1,24 @@
 package com.example.food_order_app.Models;
 
 public class Review {
-    private int reviewId;
+    private String reviewId;
 
-    private int userId;
+    private String userId;
 
-    private int foodId;
+    private String foodId;
 
-    private int rating;
+    private Float rating;
 
     private String comment;
 
     public Review() {
     }
 
-    public Review(int userId, int foodId, int rating, String comment) {
-        this.userId = userId;
-        this.foodId = foodId;
-        this.rating = rating;
+    public Review(String comment, Float rating, String reviewId, String userId) {
         this.comment = comment;
+        this.rating = rating;
+        this.reviewId = reviewId;
+        this.userId = userId;
     }
 
     public String getComment() {
@@ -29,35 +29,35 @@ public class Review {
         this.comment = comment;
     }
 
-    public int getFoodId() {
+    public String getFoodId() {
         return foodId;
     }
 
-    public void setFoodId(int foodId) {
+    public void setFoodId(String foodId) {
         this.foodId = foodId;
     }
 
-    public int getRating() {
+    public Float getRating() {
         return rating;
     }
 
-    public void setRating(int rating) {
+    public void setRating(Float rating) {
         this.rating = rating;
     }
 
-    public int getReviewId() {
+    public String getReviewId() {
         return reviewId;
     }
 
-    public void setReviewId(int reviewId) {
+    public void setReviewId(String reviewId) {
         this.reviewId = reviewId;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 }
