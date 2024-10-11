@@ -1,6 +1,7 @@
 package com.example.food_order_app.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -32,25 +33,33 @@ public class ResetPasswordActivity extends AppCompatActivity {
     private TextView tvTimer;
     private long otpExpiryDuration = 5 * 60 * 1000;
 
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reset_password);
-
         txtOtp = findViewById(R.id.txt_otp);
         txtNewPassword = findViewById(R.id.txt_new_password);
         txtConfirmPassword = findViewById(R.id.txt_confirm_password);
         btnUpdatePassword = findViewById(R.id.btn_update_password);
         tvTimer = findViewById(R.id.tv_timer);
-
         dbUsers = FirebaseDatabase.getInstance().getReference("Users");
-
         receivedOtp = getIntent().getStringExtra("otp");
+        SharedPreferences sharedPreferences = getSharedPreferences("otp_prefs", MODE_PRIVATE);
+        long savedOtpCreationTime = sharedPreferences.getLong("otpCreationTime", 0);
+        long currentTime = System.currentTimeMillis();
+        long elapsedTime = currentTime - savedOtpCreationTime;
+        long remainingTime = otpExpiryDuration - elapsedTime;
+
+        if (remainingTime > 0) {
+            startOtpCountdown(remainingTime);
+        } else {
+            tvTimer.setText("OTP expired");
+            Toast.makeText(ResetPasswordActivity.this, "OTP has expired. Please request a new one.", Toast.LENGTH_SHORT).show();
+            btnUpdatePassword.setEnabled(false);
+            btnUpdatePassword.setBackgroundTintList(ContextCompat.getColorStateList(ResetPasswordActivity.this, R.color.dark_gray));
+        }
 
         ImageButton btnBack = findViewById(R.id.btn_back);
-
-        startOtpCountdown();
 
         btnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,8 +88,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
         });
     }
 
-    private void startOtpCountdown() {
-        new CountDownTimer(otpExpiryDuration, 1000) {
+    private void startOtpCountdown(long remainingTime) {
+        new CountDownTimer(remainingTime, 1000) {
 
             public void onTick(long millisUntilFinished) {
                 long minutes = (millisUntilFinished / 1000) / 60;
@@ -93,7 +102,10 @@ public class ResetPasswordActivity extends AppCompatActivity {
                 Toast.makeText(ResetPasswordActivity.this, "OTP has expired. Please request a new one.", Toast.LENGTH_SHORT).show();
                 btnUpdatePassword.setEnabled(false);
                 btnUpdatePassword.setBackgroundTintList(ContextCompat.getColorStateList(ResetPasswordActivity.this, R.color.dark_gray));
-
+                SharedPreferences sharedPreferences = getSharedPreferences("otp_prefs", MODE_PRIVATE);
+                SharedPreferences.Editor editor = sharedPreferences.edit();
+                editor.remove("otpCreationTime");
+                editor.apply();
             }
         }.start();
     }
@@ -112,6 +124,8 @@ public class ResetPasswordActivity extends AppCompatActivity {
                                     Toast.makeText(ResetPasswordActivity.this, "OTP has expired. Please request a new one.", Toast.LENGTH_SHORT).show();
                                 } else {
                                     user.setUserPassword(newPassword);
+                                    user.setUserOtp(null);
+                                    user.setOtpCreationTime(0);
                                     userSnapshot.getRef().setValue(user).addOnCompleteListener(task -> {
                                         if (task.isSuccessful()) {
                                             Toast.makeText(ResetPasswordActivity.this, "Password updated successfully", Toast.LENGTH_SHORT).show();
@@ -141,14 +155,14 @@ public class ResetPasswordActivity extends AppCompatActivity {
 
     private boolean isOtpExpired(User user) {
         long currentTime = System.currentTimeMillis();
-        long otpCreationTime = user.getOtpCreationTime(); // Thời gian tạo OTP
-        long expiryDuration = 5 * 60 * 1000; // 5 phút
+        long otpCreationTime = user.getOtpCreationTime();
+        long expiryDuration = 5 * 60 * 1000;
         return (currentTime - otpCreationTime) > expiryDuration;
     }
 
     private void redirectToLogin() {
         Intent intent = new Intent(ResetPasswordActivity.this, LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK); // Xóa các activity khác
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(intent);
         finish();
     }

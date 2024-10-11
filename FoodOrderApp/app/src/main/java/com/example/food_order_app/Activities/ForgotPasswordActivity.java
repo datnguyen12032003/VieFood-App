@@ -1,6 +1,7 @@
 package com.example.food_order_app.Activities;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -75,8 +76,10 @@ public class ForgotPasswordActivity extends AppCompatActivity {
                                 user.setUserOtp(generatedOtp);
                                 user.setOtpCreationTime(System.currentTimeMillis());
                                 userSnapshot.getRef().setValue(user);
+                                saveOtpCreationTime();  
                                 sendOtpToEmail(email, generatedOtp);
                             } else {
+                                navigateToResetPassword(email, user.getUserOtp());
                                 Toast.makeText(ForgotPasswordActivity.this, "OTP has not expired yet. Please check your email.", Toast.LENGTH_SHORT).show();
                             }
                             break;
@@ -94,6 +97,13 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         });
     }
 
+    private void navigateToResetPassword(String email, String otp) {
+        Intent intent = new Intent(ForgotPasswordActivity.this, ResetPasswordActivity.class);
+        intent.putExtra("otp", otp);
+        intent.putExtra("email", email);
+        startActivity(intent);
+    }
+
     private boolean isOtpExpired(User user) {
         long currentTime = System.currentTimeMillis();
         long otpCreationTime = user.getOtpCreationTime();
@@ -107,10 +117,19 @@ public class ForgotPasswordActivity extends AppCompatActivity {
 
         MailSender mailSender = new MailSender(email, subject, message);
         mailSender.execute();
+
         Intent intent = new Intent(ForgotPasswordActivity.this, ResetPasswordActivity.class);
         intent.putExtra("otp", otp);
         intent.putExtra("email", email);
+        intent.putExtra("otpCreationTime", System.currentTimeMillis());
         startActivity(intent);
+    }
+
+    private void saveOtpCreationTime() {
+        SharedPreferences sharedPreferences = getSharedPreferences("otp_prefs", MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putLong("otpCreationTime", System.currentTimeMillis());
+        editor.apply();
     }
 
     private String generateOtp() {
