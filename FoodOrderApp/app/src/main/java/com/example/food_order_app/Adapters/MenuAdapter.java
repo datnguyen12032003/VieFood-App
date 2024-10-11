@@ -19,7 +19,7 @@ import com.example.food_order_app.R;
 
 import java.util.List;
 
-public class FoodItemMenuAdapter extends RecyclerView.Adapter<FoodItemMenuAdapter.FoodItemViewHolder> {
+public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.FoodItemViewHolder> {
 
     private List<FoodItem> foodItemList;
     private OnItemClickListener onItemClickListener;
@@ -28,7 +28,7 @@ public class FoodItemMenuAdapter extends RecyclerView.Adapter<FoodItemMenuAdapte
         void onAddClick(FoodItem foodItem);
     }
 
-    public FoodItemMenuAdapter(List<FoodItem> foodItemList, OnItemClickListener onItemClickListener) {
+    public MenuAdapter(List<FoodItem> foodItemList, OnItemClickListener onItemClickListener) {
         this.foodItemList = foodItemList;
         this.onItemClickListener = onItemClickListener;
     }
@@ -40,13 +40,13 @@ public class FoodItemMenuAdapter extends RecyclerView.Adapter<FoodItemMenuAdapte
 
     @NonNull
     @Override
-    public FoodItemMenuAdapter.FoodItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public MenuAdapter.FoodItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_food_item, parent, false);
         return new FoodItemViewHolder(v);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FoodItemMenuAdapter.FoodItemViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MenuAdapter.FoodItemViewHolder holder, int position) {
         FoodItem foodItem = foodItemList.get(position);
         if (foodItem == null) {
             return;
@@ -54,7 +54,7 @@ public class FoodItemMenuAdapter extends RecyclerView.Adapter<FoodItemMenuAdapte
         Glide.with(holder.itemView.getContext()).load(foodItem.getImage()).error(R.drawable.ic_image_placeholder).into(holder.foodImage);
         holder.foodName.setText(foodItem.getName());
         holder.foodDescription.setText(foodItem.getDescription());
-        holder.foodPrice.setText(String.format("$%.2f", foodItem.getPrice()));
+        holder.foodPrice.setText(String.format("%,d VNĐ", foodItem.getPrice()));
         holder.foodRating.setText(String.format("★ %.1f", foodItem.getRating()));
         if (foodItem.getQuantity() > 0) {
             holder.btnAdd.setAlpha(1.0f);

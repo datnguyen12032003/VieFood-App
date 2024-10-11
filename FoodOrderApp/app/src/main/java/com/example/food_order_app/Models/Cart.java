@@ -5,12 +5,12 @@ public class Cart {
     String userId;
     String foodId;
     int quantity;
-    double total_price;
+    Long total_price;
 
     public Cart() {
     }
 
-    public Cart(String userId, double total_price, int quantity, String foodId) {
+    public Cart(String userId, Long total_price, int quantity, String foodId) {
         this.userId = userId;
         this.total_price = total_price;
         this.quantity = quantity;
@@ -43,11 +43,11 @@ public class Cart {
         this.quantity = quantity;
     }
 
-    public double getTotal_price() {
+    public Long getTotal_price() {
         return total_price;
     }
 
-    public void setTotal_price(double total_price) {
+    public void setTotal_price(Long total_price) {
         this.total_price = total_price;
     }
 

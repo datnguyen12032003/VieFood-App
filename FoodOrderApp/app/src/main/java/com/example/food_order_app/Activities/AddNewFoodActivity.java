@@ -186,7 +186,7 @@ public class AddNewFoodActivity extends AppCompatActivity {
             String quantityString = etFoodQuantity.getText().toString();
 
             // Chuyển đổi giá và số lượng
-            double price = Double.parseDouble(priceString);
+            Long price = Long.parseLong(priceString);
             int quantity = Integer.parseInt(quantityString);// Sửa lỗi ở đây
             if (imageUri == null) {
                 Toast.makeText(AddNewFoodActivity.this, "Please choose an image", Toast.LENGTH_SHORT).show();
@@ -220,6 +220,12 @@ public class AddNewFoodActivity extends AppCompatActivity {
         // Kiểm tra giá
         if (priceString.isEmpty()) {
             Toast.makeText(this, "Price is required", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        // Kiểm tra định dạng giá (có thể là số nguyên hoặc số thập phân, có dấu phẩy hoặc dấu chấm)
+        if (!priceString.matches("^[0-9]+(\\.[0-9]{1,2})?$")) {
+            Toast.makeText(this, "Invalid price format. Use numbers only, e.g., 10000 or 10000.99", Toast.LENGTH_SHORT).show();
             return false;
         }
 

@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -21,7 +20,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.food_order_app.Activities.AddNewFoodActivity;
-import com.example.food_order_app.Adapters.FoodItemDashBoardAdapter;
+import com.example.food_order_app.Adapters.DashBoardAdapter;
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.R;
 import com.google.firebase.database.DataSnapshot;
@@ -37,7 +36,7 @@ import java.util.List;
 public class DashboardFragment extends Fragment {
 
     private RecyclerView rcv;
-    private FoodItemDashBoardAdapter adapter;
+    private DashBoardAdapter adapter;
     private List<FoodItem> foodItemList;
     private Button btnAddNewFood;
     private Spinner spinnerCategory;
@@ -68,7 +67,7 @@ public class DashboardFragment extends Fragment {
 
     private void setupRecyclerView() {
         rcv.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new FoodItemDashBoardAdapter(foodItemList, new FoodItemDashBoardAdapter.OnItemClickListener() {
+        adapter = new DashBoardAdapter(foodItemList, new DashBoardAdapter.OnItemClickListener() {
             @Override
             public void onEditClick(FoodItem foodItem) {
                 Toast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT).show();
@@ -186,7 +185,7 @@ public class DashboardFragment extends Fragment {
             public void onClick(View view) {
                 String newName = etFoodName.getText().toString();
                 String newDescription = etDescription.getText().toString();
-                double newPrice = Double.parseDouble(etPrice.getText().toString());
+                Long newPrice = Long.parseLong(etPrice.getText().toString());
                 int newQuantity = Integer.parseInt(etQuantity.getText().toString());
                 String newCategory = spinnerCategory.getSelectedItem().toString();
                 // Cập nhật thông tin món ăn
