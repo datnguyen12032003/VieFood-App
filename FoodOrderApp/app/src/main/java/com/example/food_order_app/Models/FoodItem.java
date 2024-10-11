@@ -7,7 +7,7 @@ public class FoodItem {
     private String category;
     private String name;
 
-    private double price;
+    private Long price;
 
     private String description;
     private String image;
@@ -19,7 +19,7 @@ public class FoodItem {
     public FoodItem() {
     }
 
-    public FoodItem(String category, String description, String image, String name, double price, int quantity, double rating, boolean status) {
+    public FoodItem(String category, String description, String image, String name, Long price, int quantity, double rating, boolean status) {
         this.category = category;
         this.description = description;
         this.image = image;
@@ -72,11 +72,11 @@ public class FoodItem {
         this.name = name;
     }
 
-    public double getPrice() {
+    public Long getPrice() {
         return price;
     }
 
-    public void setPrice(double price) {
+    public void setPrice(Long price) {
         this.price = price;
     }
 

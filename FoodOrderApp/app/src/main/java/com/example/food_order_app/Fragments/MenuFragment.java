@@ -1,9 +1,5 @@
 package com.example.food_order_app.Fragments;
 
-import static android.content.Context.MODE_PRIVATE;
-
-import android.content.SharedPreferences;
-import android.content.res.ColorStateList;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -22,7 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.food_order_app.Adapters.FoodItemMenuAdapter;
+import com.example.food_order_app.Adapters.MenuAdapter;
 import com.example.food_order_app.Models.Cart;
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.R;
@@ -38,7 +34,7 @@ import java.util.List;
 public class MenuFragment extends Fragment {
 
     private RecyclerView rcv;
-    private FoodItemMenuAdapter adapter;
+    private MenuAdapter adapter;
     private List<FoodItem> foodItemList;
     private DatabaseReference dbFoodItems;
     private Button btn_dishes, btn_pizza, btn_burger, btn_drinks, btn_dessert;
@@ -96,14 +92,37 @@ public class MenuFragment extends Fragment {
         rcv.setLayoutManager(new LinearLayoutManager(getContext()));
         String userId = getActivity().getSharedPreferences("user_prefs", getActivity().MODE_PRIVATE)
                 .getString("current_user_id", null);
-        adapter = new FoodItemMenuAdapter(foodItemList, new FoodItemMenuAdapter.OnItemClickListener() {
+        adapter = new MenuAdapter(foodItemList, new MenuAdapter.OnItemClickListener() {
             @Override
             public void onAddClick(FoodItem foodItem) {
                 String foodItemId = foodItem.getFoodId();
-                Cart newCart = new Cart(userId, foodItem.getPrice(), 1, foodItemId);
-                DatabaseReference dbCart = FirebaseDatabase.getInstance().getReference("Cart");
-                dbCart.push().setValue(newCart);
-                Toast.makeText(getContext(), "Added to cart", Toast.LENGTH_SHORT).show();
+                DatabaseReference dbCart = FirebaseDatabase.getInstance().getReference("Cart").child(userId);
+
+                dbCart.orderByChild("foodId").equalTo(foodItemId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        if(snapshot.exists()){
+                            for(DataSnapshot dataSnapshot : snapshot.getChildren()){
+                                Cart existingCart = dataSnapshot.getValue(Cart.class);
+                                if(existingCart != null){
+                                    int newQuantity = existingCart.getQuantity() + 1;
+                                    dataSnapshot.getRef().child("quantity").setValue(newQuantity);
+                                    dataSnapshot.getRef().child("total_price").setValue(foodItem.getPrice() * newQuantity);
+                                    Toast.makeText(getContext(), "Increased quantity in cart", Toast.LENGTH_SHORT).show();
+                                    return;
+                                }
+                            }
+                        } else {
+                            Cart newCart = new Cart(userId, foodItem.getPrice(), 1, foodItemId);
+                            dbCart.push().setValue(newCart);
+                            Toast.makeText(getContext(), "Added to cart", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+                        Toast.makeText(getContext(), "Failed to add to cart", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
         });
         rcv.setAdapter(adapter);

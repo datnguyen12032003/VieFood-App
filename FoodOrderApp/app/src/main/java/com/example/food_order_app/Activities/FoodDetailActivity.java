@@ -38,7 +38,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private DatabaseReference dbReview, dbFoodItem, dbCart;
     private RecyclerView recyclerView;
     private String strFoodId;
-    private Double strFoodPrice;
+    private Long strFoodPrice;
     private AlertDialog dialog;
     private CommentsAdapter adapter;
     private List<Review> reviewList;
@@ -52,7 +52,7 @@ public class FoodDetailActivity extends AppCompatActivity {
 
         initUI();
         strFoodId = getIntent().getStringExtra("foodId");
-        strFoodPrice = getIntent().getDoubleExtra("foodPrice", 0.0);
+        strFoodPrice = getIntent().getLongExtra("foodPrice", 0);
         if (strFoodId == null) {
             showToast("Invalid food ID");
             finish();
@@ -67,23 +67,56 @@ public class FoodDetailActivity extends AppCompatActivity {
     }
 
     private void addToCart() {
-        try{
+        try {
             String userId = getSharedPreferences("user_prefs", MODE_PRIVATE).getString("current_user_id", null);
-            if(userId == null){
+            if (userId == null) {
                 showToast("Please login to add to cart");
                 return;
             }
             dbCart = FirebaseDatabase.getInstance().getReference().child("Cart").child(userId);
-            if(dbCart == null){
-                showToast("Failed to add to cart");
-                return;
-            }
-            Cart cart = new Cart(userId, strFoodPrice, 1 , strFoodId);
-            dbCart.push().setValue(cart).onSuccessTask(task -> {
-                showToast("Added to cart");
-                return null;
+            dbCart.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+
+                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
+                            Cart cart = dataSnapshot.getValue(Cart.class);
+                            cart.setCartId(dataSnapshot.getKey());
+                            if (cart != null && cart.getFoodId().equals(strFoodId)) {
+                                cart.setQuantity(cart.getQuantity() + 1);
+                                cart.setTotal_price(cart.getQuantity() * strFoodPrice);
+
+                                dbCart.child(cart.getCartId()).setValue(cart).addOnCompleteListener(task -> {
+                                    if (task.isSuccessful()) {
+                                        showToast("Added to cart");
+                                    } else {
+                                        showToast("Failed to add to cart");
+                                    }
+                                });
+                                return;
+                            }
+
+                        }
+
+                    } else {
+                        Cart cart = new Cart(userId, strFoodPrice, 1, strFoodId);
+                        dbCart.push().setValue(cart).addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                showToast("Added to cart");
+                            } else {
+                                showToast("Failed to add to cart");
+                            }
+                        });
+                    }
+
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+                    showToast(error.getMessage());
+                }
             });
-        } catch(Exception e){
+        } catch (Exception e) {
             showToast(e.getMessage());
         }
 
@@ -153,7 +186,7 @@ public class FoodDetailActivity extends AppCompatActivity {
     private void displayFoodDetails(DataSnapshot snapshot) {
         foodName.setText(snapshot.child("name").getValue(String.class));
         foodDescription.setText(snapshot.child("description").getValue(String.class));
-        foodPrice.setText(String.format("$%.2f", snapshot.child("price").getValue(Double.class)));
+        foodPrice.setText(String.format("%,d VNĐ", snapshot.child("price").getValue(Long.class)));
         foodRating.setText(String.format("★ %.1f", snapshot.child("rating").getValue(Double.class)));
         foodCategory.setText(snapshot.child("category").getValue(String.class));
         Glide.with(this).load(snapshot.child("image").getValue(String.class)).error(R.drawable.ic_image_placeholder).into(foodImage1);
