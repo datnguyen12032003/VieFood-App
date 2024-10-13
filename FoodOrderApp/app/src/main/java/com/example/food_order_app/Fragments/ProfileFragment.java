@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.food_order_app.Activities.ChangePasswordActivity;
 import com.example.food_order_app.Activities.ProfileActivity;
 import com.example.food_order_app.Models.User;
@@ -50,11 +51,11 @@ public class ProfileFragment extends Fragment {
         Button btnChangePassword = view.findViewById(R.id.btnChangePassword);
         Button btnEditProfile = view.findViewById(R.id.btnEditProfile);
         fetchUserData();
+
         btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ProfileActivity.class);
             startActivity(intent);
         });
-
 
         btnChangePassword.setOnClickListener(v -> {
             ChangePasswordActivity dialogFragment = new ChangePasswordActivity();
@@ -65,7 +66,6 @@ public class ProfileFragment extends Fragment {
     }
 
     private void fetchUserData() {
-
         String userId = getActivity().getSharedPreferences("user_prefs", getActivity().MODE_PRIVATE)
                 .getString("current_user_id", null);
 
@@ -78,7 +78,11 @@ public class ProfileFragment extends Fragment {
                         if (currentUser != null) {
                             userNameTextView.setText(currentUser.getUserName());
                             userPhoneTextView.setText(currentUser.getUserPhone());
-                            Glide.with(getActivity()).load(currentUser.getAvatarUrl()).error(R.drawable.ic_image_placeholder).into(imageAvatar);
+                            Glide.with(getActivity())
+                                    .load(currentUser.getAvatarUrl())
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .error(R.drawable.ic_image_placeholder)
+                                    .into(imageAvatar);
                         } else {
                             showToast("User not found");
                         }
@@ -86,6 +90,7 @@ public class ProfileFragment extends Fragment {
                         showToast("User not found");
                     }
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     showToast("Failed to fetch user data");
@@ -95,7 +100,6 @@ public class ProfileFragment extends Fragment {
             showToast("No user found");
         }
     }
-
 
     @Override
     public void onResume() {
