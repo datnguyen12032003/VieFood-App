@@ -57,9 +57,10 @@ public class ProfileFragment extends Fragment {
 
 
         btnChangePassword.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), ChangePasswordActivity.class);
-            startActivity(intent);
+            ChangePasswordActivity dialogFragment = new ChangePasswordActivity();
+            dialogFragment.show(requireActivity().getSupportFragmentManager(), "ChangePasswordActivity");
         });
+
         return view;
     }
 
