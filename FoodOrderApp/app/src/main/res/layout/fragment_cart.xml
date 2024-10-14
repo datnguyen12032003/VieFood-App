@@ -38,6 +38,25 @@
                 android:src="@drawable/ic_cart_1" />
         </LinearLayout>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:gravity="end"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/btn_delete_all"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:padding="0dp"
+                android:layout_margin="5dp"
+                android:text="Delete all" />
+
+
+        </LinearLayout>
+
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cartFragmentContainer"
             android:layout_width="match_parent"
@@ -50,10 +69,10 @@
                 android:id="@+id/tvEmptyCart"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center"
                 android:text="Giỏ hàng trống"
                 android:textSize="20dp"
                 android:visibility="gone"
-                android:layout_gravity="center"
                 app:layout_constraintBottom_toBottomOf="@+id/cartFragmentContainer"
                 app:layout_constraintEnd_toEndOf="@+id/cartFragmentContainer"
                 app:layout_constraintStart_toStartOf="@+id/cartFragmentContainer"
