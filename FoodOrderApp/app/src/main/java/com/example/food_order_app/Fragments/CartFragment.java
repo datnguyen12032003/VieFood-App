@@ -3,6 +3,7 @@ package com.example.food_order_app.Fragments;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -11,6 +12,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -41,7 +45,7 @@ public class CartFragment extends Fragment {
     private List<FoodItem> foodItemList;
     private TextView tvSubtotal, tvDiscount, tvDeliveryFee, tvTotalAmount, tvEmptyCart;
     private LinearLayout paymentSummaryContainer, btnContainer;
-    private Button btnAddItems, btnCheckout;
+    private Button btnAddItems, btnCheckout, btnDeleteAll;
     private DatabaseReference dbCartItems, dbFoodItems;
     private String userId;
     private double subtotal, discount, totalAmount;
@@ -153,7 +157,7 @@ public class CartFragment extends Fragment {
         progressBar = v.findViewById(R.id.progress_bar);
         paymentSummaryContainer = v.findViewById(R.id.paymentSummaryContainer);
         btnContainer = v.findViewById(R.id.buttonContainer);
-
+        btnDeleteAll = v.findViewById(R.id.btn_delete_all);
     }
 
     private void setupRecyclerView() {
@@ -168,8 +172,26 @@ public class CartFragment extends Fragment {
             public void onDecreseClick(Cart cart) {
                 decreseQuantity(cart);
             }
+
+            @Override
+            public void onDeleteClick(Cart cart) { deleteItem(cart);}
         });
-        rcv.setAdapter(adapter);
+        rcv.setAdapter(adapter);// Đặt adapter cho RecyclerView
+    }
+
+    private void deleteItem(Cart cart) {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(getContext());
+        alertDialog.setTitle("Delete Item");
+        alertDialog.setMessage("Do you want to delete this item?");
+
+        alertDialog.setPositiveButton("Yes", (dialog, which) -> {
+            dbCartItems.child(cart.getCartId()).removeValue();
+            loadCartItems();
+        });
+        alertDialog.setNegativeButton("No", (dialog, which) -> {
+            dialog.dismiss();
+        });
+        alertDialog.show();
     }
 
     private void decreseQuantity(Cart cart) {
@@ -179,7 +201,7 @@ public class CartFragment extends Fragment {
                 dbFoodItems.child(cart.getFoodId()).addListenerForSingleValueEvent(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        if(snapshot.exists()){
+                        if (snapshot.exists()) {
                             Long updatedTotalPrice = cart.getQuantity() * snapshot.getValue(FoodItem.class).getPrice();
                             cart.setTotal_price(updatedTotalPrice);
                             dbCartItems.child(cart.getCartId()).setValue(cart).addOnCompleteListener(task -> {
@@ -192,6 +214,7 @@ public class CartFragment extends Fragment {
                             });
                         }
                     }
+
                     @Override
                     public void onCancelled(@NonNull DatabaseError error) {
                         showToast("Failed to update total price");
@@ -211,7 +234,7 @@ public class CartFragment extends Fragment {
             dbFoodItems.child(cart.getFoodId()).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.exists()){
+                    if (snapshot.exists()) {
                         Long updatedTotalPrice = cart.getQuantity() * snapshot.getValue(FoodItem.class).getPrice();
                         cart.setTotal_price(updatedTotalPrice);
                         dbCartItems.child(cart.getCartId()).setValue(cart).addOnCompleteListener(task -> {
@@ -220,10 +243,10 @@ public class CartFragment extends Fragment {
                             } else {
                                 showToast("Failed to increase quantity");
                             }
-
                         });
                     }
                 }
+
                 @Override
                 public void onCancelled(@NonNull DatabaseError error) {
                     showToast("Failed to update total price");
@@ -238,6 +261,20 @@ public class CartFragment extends Fragment {
     private void setupButtonListeners() {
         btnAddItems.setOnClickListener(v -> {
             openFragment(new MenuFragment());
+        });
+        btnDeleteAll.setOnClickListener(v -> {
+            AlertDialog.Builder alertDialog = new AlertDialog.Builder(this.getContext());
+            alertDialog.setTitle("Delete Item");
+            alertDialog.setMessage("Do you want to delete all items?");
+
+            alertDialog.setPositiveButton("Yes", (dialog, which) -> {
+                dbCartItems.removeValue();
+                loadCartItems();
+            });
+            alertDialog.setNegativeButton("No", (dialog, which) -> {
+                dialog.dismiss();
+            });
+            alertDialog.show();
         });
     }
 
