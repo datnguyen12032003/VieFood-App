@@ -77,30 +77,25 @@ public class FoodDetailActivity extends AppCompatActivity {
             dbCart.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    boolean isExists = false;
                     if (snapshot.exists()) {
-
                         for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
                             Cart cart = dataSnapshot.getValue(Cart.class);
                             cart.setCartId(dataSnapshot.getKey());
                             if (cart != null && cart.getFoodId().equals(strFoodId)) {
-                                cart.setQuantity(cart.getQuantity() + 1);
-                                cart.setTotal_price(cart.getQuantity() * strFoodPrice);
-
-                                dbCart.child(cart.getCartId()).setValue(cart).addOnCompleteListener(task -> {
-                                    if (task.isSuccessful()) {
-                                        showToast("Added to cart");
-                                    } else {
-                                        showToast("Failed to add to cart");
-                                    }
-                                });
-                                return;
+                                int newQuantity = cart.getQuantity() + 1;
+                                dataSnapshot.getRef().child("quantity").setValue(newQuantity);
+                                dataSnapshot.getRef().child("total_price").setValue(strFoodPrice * newQuantity);
+                                isExists = true;
+                                showToast("Increased quantity in cart");
+                                break;
                             }
-
                         }
+                    }
 
-                    } else {
-                        Cart cart = new Cart(userId, strFoodPrice, 1, strFoodId);
-                        dbCart.push().setValue(cart).addOnCompleteListener(task -> {
+                    if (!isExists) {
+                        Cart newCart = new Cart(userId, strFoodPrice, 1, strFoodId);
+                        dbCart.push().setValue(newCart).addOnCompleteListener(task -> {
                             if (task.isSuccessful()) {
                                 showToast("Added to cart");
                             } else {
@@ -108,7 +103,6 @@ public class FoodDetailActivity extends AppCompatActivity {
                             }
                         });
                     }
-
                 }
 
                 @Override
