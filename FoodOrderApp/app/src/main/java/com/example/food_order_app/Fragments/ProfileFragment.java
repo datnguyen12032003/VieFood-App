@@ -16,6 +16,7 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.food_order_app.Activities.ChangePasswordActivity;
+import com.example.food_order_app.Activities.FavouriteActivity;
 import com.example.food_order_app.Activities.ProfileActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
@@ -31,6 +32,7 @@ public class ProfileFragment extends Fragment {
     private TextView userPhoneTextView;
     private DatabaseReference dbUsers;
     private ImageView imageAvatar;
+    private Button btnFavourite;
 
     public ProfileFragment() {
     }
@@ -57,9 +59,17 @@ public class ProfileFragment extends Fragment {
             startActivity(intent);
         });
 
+
         btnChangePassword.setOnClickListener(v -> {
             ChangePasswordActivity dialogFragment = new ChangePasswordActivity();
             dialogFragment.show(requireActivity().getSupportFragmentManager(), "ChangePasswordActivity");
+        });
+
+        btnFavourite = view.findViewById(R.id.btn_favourite);
+
+        btnFavourite.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), FavouriteActivity.class);
+            startActivity(intent);
         });
 
         return view;
