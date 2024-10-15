@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.food_order_app.Adapters.CommentsAdapter;
 import com.example.food_order_app.Models.Cart;
+import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.Models.Review;
 import com.example.food_order_app.R;
 import com.google.firebase.database.DataSnapshot;
@@ -34,14 +35,16 @@ import java.util.List;
 public class FoodDetailActivity extends AppCompatActivity {
 
     private TextView foodName, foodDescription, foodPrice, foodRating, foodCategory, txt_no_reviews;
-    private ImageView foodImage1;
-    private DatabaseReference dbReview, dbFoodItem, dbCart;
+    private ImageView foodImage1, favoriteIcon;
+    private DatabaseReference dbReview, dbFoodItem, dbCart, dbFavorites;
     private RecyclerView recyclerView;
     private String strFoodId;
     private Long strFoodPrice;
     private AlertDialog dialog;
     private CommentsAdapter adapter;
     private List<Review> reviewList;
+    private FoodItem foodItem;
+    private boolean isFavorite = false;
 
 
     @Override
@@ -61,10 +64,53 @@ public class FoodDetailActivity extends AppCompatActivity {
         setupRecyclerView();
         loadContent();
 
+        favoriteIcon.setOnClickListener(v -> {
+            if (foodItem != null) {
+                toggleFavorite(foodItem);
+            } else {
+                showToast("Food item is not available.");
+            }
+        });
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         findViewById(R.id.btn_add_comment).setOnClickListener(v -> addComment());
         findViewById(R.id.btn_add_to_cart).setOnClickListener(v -> addToCart());
     }
+
+    private void toggleFavorite(FoodItem foodItem) {
+        dbFavorites = FirebaseDatabase.getInstance().getReference().child("Favourites").child(getCurrentUserId());
+        dbFavorites.child(strFoodId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    dbFavorites.child(snapshot.getKey()).removeValue().addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            showToast("Removed from favorites");
+                            favoriteIcon.setImageResource(R.drawable.ic_favourite_default);
+                            isFavorite = false;
+                        } else {
+                            showToast("Failed to remove from favorites");
+                        }
+                    });
+                } else {
+                    dbFavorites.child(strFoodId).setValue(foodItem).addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            showToast("Added to favorites");
+                            favoriteIcon.setImageResource(R.drawable.ic_favourite_full);
+                            isFavorite = true;
+                        } else {
+                            showToast("Failed to add to favorites");
+                        }
+                    });
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                showToast("Failed to check favorites");
+            }
+        });
+    }
+
 
     private void addToCart() {
         try {
@@ -131,6 +177,8 @@ public class FoodDetailActivity extends AppCompatActivity {
         foodImage1 = findViewById(R.id.img_foodImage);
         recyclerView = findViewById(R.id.rcv_reviews);
         txt_no_reviews = findViewById(R.id.txt_no_reviews);
+        favoriteIcon = findViewById(R.id.favoriteIcon);
+
 
         reviewList = new ArrayList<>();
     }
@@ -141,8 +189,13 @@ public class FoodDetailActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
+                    foodItem = snapshot.getValue(FoodItem.class);
                     displayFoodDetails(snapshot);
                     loadReview();
+                    checkIfFavorite(strFoodId);
+                    if (foodItem != null && foodItem.getFoodId() != null) {
+                        checkIfFavorite(snapshot.getKey());
+                    }
                 }
             }
 
@@ -151,6 +204,40 @@ public class FoodDetailActivity extends AppCompatActivity {
                 showToast("Failed to load food details");
             }
         });
+    }
+
+    private void checkIfFavorite(String foodId) {
+        dbFavorites = FirebaseDatabase.getInstance().getReference().child("Favourites").child(getCurrentUserId());
+
+        dbFavorites.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                boolean isFoodFound = false;
+
+                for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                    if (childSnapshot.getKey().equals(foodId)) {
+                        isFavorite = true;
+                        favoriteIcon.setImageResource(R.drawable.ic_favourite_full);
+                        isFoodFound = true;
+                        break;
+                    }
+                }
+
+                if (!isFoodFound) {
+                    isFavorite = false;
+                    favoriteIcon.setImageResource(R.drawable.ic_favourite_default);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                showToast("Failed to check favorites");
+            }
+        });
+    }
+
+    private String getCurrentUserId() {
+        return getSharedPreferences("user_prefs", MODE_PRIVATE).getString("current_user_id", null);
     }
 
     private void loadReview() {

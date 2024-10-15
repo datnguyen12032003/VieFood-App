@@ -52,6 +52,9 @@
             android:name=".Activities.EditProfileActivity"
             android:exported="false" />
         <activity
+            android:name=".Activities.FavouriteActivity"
+            android:exported="false" />
+        <activity
             android:name=".Activities.HomeActivity"
             android:exported="true" />
         <activity
