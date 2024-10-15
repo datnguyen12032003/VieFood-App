@@ -72,6 +72,7 @@ public class MenuFragment extends Fragment {
                     FoodItem foodItem = dataSnapshot.getValue(FoodItem.class);
                     if (foodItem != null) {
                         foodItem.setFoodId(dataSnapshot.getKey());
+                        dbFoodItems.child(dataSnapshot.getKey()).child("foodId").setValue(foodItem.getFoodId());
                         foodItemList.add(foodItem);
                     }
                 }
