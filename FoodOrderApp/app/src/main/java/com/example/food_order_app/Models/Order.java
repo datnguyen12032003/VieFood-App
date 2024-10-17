@@ -1,10 +1,12 @@
 package com.example.food_order_app.Models;
 
+import java.util.List;
+
 public class Order {
 
-    private int orderId;
+    private String orderId;
 
-    private int userId;
+    private String userId;
 
     private String orderDate;
 
@@ -18,21 +20,27 @@ public class Order {
 
     private String orderNote;
 
-    private double totalPrice;
 
-
+    private List<Cart> orderedItems;
     public Order() {
     }
 
-    public Order(String orderAddress, String orderDate, String orderNote, String orderPhone, String orderStatus, double orderTotal, double totalPrice, int userId) {
+    public Order(String orderAddress, String orderDate, String orderNote, String orderPhone, String orderStatus, double orderTotal,  String userId) {
         this.orderAddress = orderAddress;
         this.orderDate = orderDate;
         this.orderNote = orderNote;
         this.orderPhone = orderPhone;
         this.orderStatus = orderStatus;
         this.orderTotal = orderTotal;
-        this.totalPrice = totalPrice;
         this.userId = userId;
+    }
+
+    public List<Cart> getOrderedItems() {
+        return orderedItems;
+    }
+
+    public void setOrderedItems(List<Cart> orderedItems) {
+        this.orderedItems = orderedItems;
     }
 
     public String getOrderAddress() {
@@ -59,13 +67,6 @@ public class Order {
         this.orderPhone = orderPhone;
     }
 
-    public double getTotalPrice() {
-        return totalPrice;
-    }
-
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
 
     public String getOrderDate() {
         return orderDate;
@@ -75,11 +76,11 @@ public class Order {
         this.orderDate = orderDate;
     }
 
-    public int getOrderId() {
+    public String getOrderId() {
         return orderId;
     }
 
-    public void setOrderId(int orderId) {
+    public void setOrderId(String orderId) {
         this.orderId = orderId;
     }
 
@@ -99,11 +100,11 @@ public class Order {
         this.orderTotal = orderTotal;
     }
 
-    public int getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 }

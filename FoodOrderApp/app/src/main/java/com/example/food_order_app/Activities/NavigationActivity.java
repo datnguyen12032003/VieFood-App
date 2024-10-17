@@ -29,6 +29,12 @@ public class NavigationActivity extends AppCompatActivity {
         // Đặt item mặc định là Home
         binding.bottomNavigationView.setSelectedItemId(R.id.home);
 
+        if (getIntent().getBooleanExtra("openCartFragment", false)) {
+            openFragment(new CartFragment());
+            binding.bottomNavigationView.setSelectedItemId(R.id.cart);
+            getIntent().removeExtra("openCartFragment");
+        }
+
         binding.bottomNavigationView.setOnItemSelectedListener(item -> {
             switch (item.getItemId()) {
                 case R.id.home:

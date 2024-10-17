@@ -1,5 +1,6 @@
 package com.example.food_order_app.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -12,9 +13,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,6 +21,8 @@ import android.widget.Toast;
 import com.example.food_order_app.Adapters.CartAdapter;
 import com.example.food_order_app.Models.Cart;
 import com.example.food_order_app.Models.FoodItem;
+import com.example.food_order_app.Activities.OrderActivity;
+import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -30,6 +30,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.Serializable;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -51,6 +52,7 @@ public class CartFragment extends Fragment {
     private double subtotal, discount, totalAmount;
     private double deliveryFee = 10000;
     private ProgressBar progressBar;
+    private User currentUser;
 
 
     @Override
@@ -62,6 +64,9 @@ public class CartFragment extends Fragment {
         dbFoodItems = FirebaseDatabase.getInstance().getReference("FoodItems");
         cartItemsList = new ArrayList<>();
         foodItemList = new ArrayList<>();
+        loadCurrentUser();
+
+
     }
 
     @Override
@@ -74,6 +79,26 @@ public class CartFragment extends Fragment {
         loadCartItems();
         return v;
     }
+
+    private void loadCurrentUser() {
+        String userId = getActivity().getSharedPreferences("user_prefs", getActivity().MODE_PRIVATE)
+                .getString("current_user_id", null);
+        DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+        dbUsers.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    currentUser = snapshot.getValue(User.class); // Assuming User is your model class.
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                showToast("Failed to load user data");
+            }
+        });
+    }
+
 
 
     private void loadCartItems() {
@@ -174,7 +199,9 @@ public class CartFragment extends Fragment {
             }
 
             @Override
-            public void onDeleteClick(Cart cart) { deleteItem(cart);}
+            public void onDeleteClick(Cart cart) {
+                deleteItem(cart);
+            }
         });
         rcv.setAdapter(adapter);// Đặt adapter cho RecyclerView
     }
@@ -276,6 +303,21 @@ public class CartFragment extends Fragment {
             });
             alertDialog.show();
         });
+
+        btnCheckout.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), OrderActivity.class);
+            // Pass the list of cart items
+
+            intent.putExtra("cartItems", (Serializable) cartItemsList);
+            intent.putExtra("totalAmount", totalAmount);
+            startActivity(intent);
+            if (currentUser != null) {
+                intent.putExtra("currentUser", currentUser);
+            }
+
+            startActivity(intent);
+        });
+
     }
 
     private void showToast(String message) {

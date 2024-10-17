@@ -1,6 +1,9 @@
 package com.example.food_order_app.Models;
 
-public class Cart {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Cart implements Parcelable {
     String cartId;
     String userId;
     String foodId;
@@ -17,8 +20,45 @@ public class Cart {
         this.foodId = foodId;
     }
 
-    // Getter và setter cho các thuộc tính
+    // Phương thức tạo từ Parcel
+    protected Cart(Parcel in) {
+        cartId = in.readString();
+        userId = in.readString();
+        foodId = in.readString();
+        quantity = in.readInt();
+        // Lưu ý: Đối với Long, bạn cần sử dụng readLong()
+        total_price = in.readLong();
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(cartId);
+        dest.writeString(userId);
+        dest.writeString(foodId);
+        dest.writeInt(quantity);
+        // Lưu ý: Đối với Long, bạn cần sử dụng writeLong()
+        dest.writeLong(total_price);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    // Tạo Creator cho Parcelable
+    public static final Creator<Cart> CREATOR = new Creator<Cart>() {
+        @Override
+        public Cart createFromParcel(Parcel in) {
+            return new Cart(in);
+        }
+
+        @Override
+        public Cart[] newArray(int size) {
+            return new Cart[size];
+        }
+    };
+
+    // Getter và setter cho các thuộc tính
     public String getCartId() {
         return cartId;
     }
