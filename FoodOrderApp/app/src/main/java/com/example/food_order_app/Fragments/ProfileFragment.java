@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.food_order_app.Activities.ChangePasswordActivity;
 import com.example.food_order_app.Activities.FavouriteActivity;
+import com.example.food_order_app.Activities.OrderHistoryActivity;
 import com.example.food_order_app.Activities.ProfileActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
@@ -32,7 +33,7 @@ public class ProfileFragment extends Fragment {
     private TextView userPhoneTextView;
     private DatabaseReference dbUsers;
     private ImageView imageAvatar;
-    private Button btnFavourite;
+    private Button btnFavourite, btnOrder;
 
     public ProfileFragment() {
     }
@@ -52,20 +53,26 @@ public class ProfileFragment extends Fragment {
         imageAvatar = view.findViewById(R.id.profileImage);
         Button btnChangePassword = view.findViewById(R.id.btnChangePassword);
         Button btnEditProfile = view.findViewById(R.id.btnEditProfile);
+        btnOrder = view.findViewById(R.id.btnOrder);
+        btnFavourite = view.findViewById(R.id.btn_favourite);
+
+        // Load user data after view has been created
         fetchUserData();
+
+        btnOrder.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), OrderHistoryActivity.class);
+            startActivity(intent);
+        });
 
         btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ProfileActivity.class);
             startActivity(intent);
         });
 
-
         btnChangePassword.setOnClickListener(v -> {
             ChangePasswordActivity dialogFragment = new ChangePasswordActivity();
             dialogFragment.show(requireActivity().getSupportFragmentManager(), "ChangePasswordActivity");
         });
-
-        btnFavourite = view.findViewById(R.id.btn_favourite);
 
         btnFavourite.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), FavouriteActivity.class);
@@ -83,12 +90,13 @@ public class ProfileFragment extends Fragment {
             dbUsers.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (dataSnapshot.exists()) {
+                    if (isAdded() && dataSnapshot.exists()) { // Check if fragment is added
                         User currentUser = dataSnapshot.getValue(User.class);
                         if (currentUser != null) {
                             userNameTextView.setText(currentUser.getUserName());
                             userPhoneTextView.setText(currentUser.getUserPhone());
-                            Glide.with(getActivity())
+                            // Use 'ProfileFragment.this' instead of 'getActivity()'
+                            Glide.with(ProfileFragment.this)
                                     .load(currentUser.getAvatarUrl())
                                     .apply(RequestOptions.circleCropTransform())
                                     .error(R.drawable.ic_image_placeholder)
@@ -118,6 +126,8 @@ public class ProfileFragment extends Fragment {
     }
 
     private void showToast(String message) {
-        Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        if (getActivity() != null) { // Check if getActivity() is not null
+            Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 }
