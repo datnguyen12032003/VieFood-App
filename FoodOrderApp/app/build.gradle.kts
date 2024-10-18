@@ -49,6 +49,9 @@ dependencies {
     implementation(libs.firebase.database)
     implementation("com.sun.mail:android-mail:1.6.2")
     implementation ("com.sun.mail:android-activation:1.6.2")
+    implementation ("com.google.android.gms:play-services-maps:18.1.0")
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
+
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

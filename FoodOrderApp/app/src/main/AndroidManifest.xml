@@ -9,6 +9,9 @@
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
 
 
     <application
@@ -21,6 +24,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.FoodOrderApp"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyCA_lCPKbVHYFnYg_yQLucEe8bMqo3j0Qw" />
+
         <activity
             android:name=".Activities.FoodDetailActivity"
             android:exported="false" />
@@ -60,12 +67,14 @@
         <activity
             android:name=".Activities.OrderActivity"
             android:exported="false" />
+        
         <activity
             android:name=".Activities.HomeActivity"
             android:exported="true" />
         <activity android:name=".Activities.OrderHistoryActivity"/>
         <activity android:name=".Activities.OrderDetailActivity"/>
         <activity android:name=".Activities.OrderHistoryAdminActivity"/>
+        <activity android:name=".Activities.MapsActivity"/>
         <activity
             android:name=".Activities.MainActivity"
             android:exported="true">

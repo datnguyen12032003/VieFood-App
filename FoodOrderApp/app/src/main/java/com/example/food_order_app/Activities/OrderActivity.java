@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
@@ -56,16 +57,28 @@ public class OrderActivity extends AppCompatActivity {
         buttonConfirm.setOnClickListener(v -> showConfirmationDialog((List<Cart>) getIntent().getSerializableExtra("cartItems")));
         buttonCancel.setOnClickListener(v -> finish());
 
-
-
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            if (data != null) {
+                String selectedAddress = data.getStringExtra("selectedAddress");
+                orderAddress.setText(selectedAddress);
+            }
+        }
+    }
 
     private void initViews() {
         SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
         userId = sharedPreferences.getString("current_user_id", null);
         dbOrders = FirebaseDatabase.getInstance().getReference("Orders");
+        ImageView icLocationMap = findViewById(R.id.ic_location_map);
+        icLocationMap.setOnClickListener(v -> {
+            Intent mapIntent = new Intent(OrderActivity.this, MapsActivity.class);
+            startActivityForResult(mapIntent, 1);
+        });
 
         recyclerViewOrderProducts = findViewById(R.id.recyclerView_order_products);
         orderAddress = findViewById(R.id.order_address);
@@ -126,7 +139,6 @@ public class OrderActivity extends AppCompatActivity {
                 if (task.isSuccessful()) {
                     Toast.makeText(this, "Order placed successfully!", Toast.LENGTH_SHORT).show();
                     sendNotification("Order Confirmation", "Your order has been placed successfully!");
-
                     Intent intent = new Intent(OrderActivity.this, NavigationActivity.class);
                     intent.putExtra("openCartFragment", true);
                     startActivity(intent);
@@ -141,6 +153,7 @@ public class OrderActivity extends AppCompatActivity {
             Toast.makeText(this, "Failed to generate order ID.", Toast.LENGTH_SHORT).show();
         }
     }
+
 
     private void clearCart() {
         DatabaseReference dbCartItems = FirebaseDatabase.getInstance().getReference("Cart").child(userId);
@@ -172,7 +185,7 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     private void sendNotification(String title, String message) {
-        // Tạo một NotificationChannel (chỉ cần cho API 26 trở lên)
+
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             String channelId = "order_channel";
             CharSequence name = "Order Notifications";
@@ -186,7 +199,6 @@ public class OrderActivity extends AppCompatActivity {
             }
         }
 
-        // Tạo thông báo
         NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "order_channel")
                 .setSmallIcon(R.drawable.food_icon)
                 .setContentTitle(title)
