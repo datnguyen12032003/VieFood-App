@@ -10,4 +10,11 @@
         <item>Dessert</item>
         <item>Drinks</item>
     </string-array>
+    <string-array name="order_status_array">
+        <item>All</item>
+        <item>Cancelled</item>
+        <item>Waiting</item>
+        <item>Success</item>
+    </string-array>
+
 </resources>

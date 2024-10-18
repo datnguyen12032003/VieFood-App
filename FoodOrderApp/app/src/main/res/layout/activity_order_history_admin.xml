@@ -1,37 +1,57 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
-
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@android:color/white">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#FFFFFD"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="16dp">
-
+        android:padding="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/background_rounded">
 
         <ImageView
             android:id="@+id/ic_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="16dp"
-            android:src="@drawable/ic_back" />
+            android:src="@drawable/ic_back"
+            android:contentDescription="@string/back_button" />
 
         <TextView
             android:id="@+id/title_order_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="List of all orders"
+            android:text="List of All Orders"
             android:textColor="#FF5722"
             android:textSize="24sp"
             android:textStyle="bold" />
     </LinearLayout>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Filter by Status"
+        android:textColor="#555"
+        android:textSize="16sp"
+        android:layout_marginBottom="8dp" />
+
+    <Spinner
+        android:id="@+id/status_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/spinner_background"
+        android:padding="12dp"
+        android:spinnerMode="dropdown" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView_orders"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:paddingTop="8dp" />
 </LinearLayout>
