@@ -18,6 +18,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.food_order_app.Activities.ChangePasswordActivity;
 import com.example.food_order_app.Activities.FavouriteActivity;
 import com.example.food_order_app.Activities.OrderHistoryActivity;
+import com.example.food_order_app.Activities.OrderHistoryAdminActivity;
 import com.example.food_order_app.Activities.ProfileActivity;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
@@ -60,9 +61,41 @@ public class ProfileFragment extends Fragment {
         fetchUserData();
 
         btnOrder.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), OrderHistoryActivity.class);
-            startActivity(intent);
+            String userId = getActivity().getSharedPreferences("user_prefs", getActivity().MODE_PRIVATE)
+                    .getString("current_user_id", null);
+
+            if (userId != null) {
+                dbUsers.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.exists()) {
+                            User currentUser = dataSnapshot.getValue(User.class);
+                            if (currentUser != null) {
+                                Intent intent;
+                                if (currentUser.isAdmin()) {
+                                    intent = new Intent(getActivity(), OrderHistoryAdminActivity.class);
+                                } else {
+                                    intent = new Intent(getActivity(), OrderHistoryActivity.class);
+                                }
+                                startActivity(intent);
+                            } else {
+                                showToast("User not found");
+                            }
+                        } else {
+                            showToast("User not found");
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+                        showToast("Failed to fetch user data");
+                    }
+                });
+            } else {
+                showToast("No user found");
+            }
         });
+
 
         btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ProfileActivity.class);

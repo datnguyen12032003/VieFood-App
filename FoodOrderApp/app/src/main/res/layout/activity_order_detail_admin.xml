@@ -27,7 +27,7 @@
             android:id="@+id/title_order_history_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Order History Detail "
+            android:text="Order History Detail Admin "
             android:textColor="#FF5722"
             android:textSize="24sp"
             android:textStyle="bold" />
