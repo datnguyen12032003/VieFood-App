@@ -32,7 +32,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-public class OrderDetailActivity extends AppCompatActivity {
+public class OrderDetailAdminActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewOrderDetails;
     private OrderAdapter orderAdapter;
@@ -40,15 +40,18 @@ public class OrderDetailActivity extends AppCompatActivity {
     private TextView orderSubtotalTextView, orderDeliveryTextView, orderDiscountTextView;
     private DatabaseReference dbCart;
     private Button updateStatusButton, reorderButton;
+    private static final int ORDER_DETAIL_REQUEST_CODE = 1;
 
     private ImageView icBack;
     private boolean isAdmin;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_order_detail);
+        setContentView(R.layout.activity_order_detail_admin);
 
         isAdmin = getSharedPreferences("user_prefs", MODE_PRIVATE).getBoolean("admin", false);
+        Intent intent = new Intent(this, OrderDetailAdminActivity.class);
+        startActivityForResult(intent, ORDER_DETAIL_REQUEST_CODE);
 
         String orderId = getIntent().getStringExtra("orderId");
         String orderStatus = getIntent().getStringExtra("orderStatus");
@@ -74,9 +77,10 @@ public class OrderDetailActivity extends AppCompatActivity {
         icBack.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                onBackPressed();
+                finish();
             }
         });
+
 
         orderIdTextView = findViewById(R.id.orderId);
         orderStatusTextView = findViewById(R.id.orderStatus);
@@ -100,25 +104,12 @@ public class OrderDetailActivity extends AppCompatActivity {
             orderNoteTextView.setText("Note: " + orderNote);
         }
 
-        Button reorderButton = findViewById(R.id.reorderButton);
-        reorderButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                reorderItems(orderedItems);
-            }
-        });
-
         updateStatusButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showUpdateStatusDialog(orderId); // Pass the orderId to the dialog
+                showUpdateStatusDialog(orderId);
             }
         });
-
-
-
-
-
         double subtotal = 0;
         double discount = 0;
         double deliveryFee = 10000;
@@ -137,6 +128,8 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         double totalAmount = subtotal - discount + deliveryFee;
 
+
+
         orderTotalTextView.setText("Total: " + formatCurrency(totalAmount));
         orderSubtotalTextView.setText("Subtotal: " + formatCurrency(subtotal));
         orderDeliveryTextView.setText("Delivery Fee: " + formatCurrency(deliveryFee));
@@ -148,6 +141,8 @@ public class OrderDetailActivity extends AppCompatActivity {
         recyclerViewOrderDetails.setAdapter(orderAdapter);
     }
 
+
+
     private String formatDate(String orderDate) {
         long timestamp = Long.parseLong(orderDate);
         Date date = new Date(timestamp);
@@ -155,18 +150,14 @@ public class OrderDetailActivity extends AppCompatActivity {
         return outputFormat.format(date);
     }
 
+
+
     private String formatCurrency(double amount) {
         NumberFormat formatter = NumberFormat.getInstance(new Locale("vi", "VN"));
         String formattedAmount = formatter.format(amount);
         return formattedAmount + " VNĐ";
     }
 
-    public void onUpdateOrderSuccess() {
-        Intent intent = new Intent();
-        intent.putExtra("orderUpdated", true);
-        setResult(RESULT_OK, intent);
-        finish();
-    }
 
     private void updateOrderStatus(String orderId, String status) {
         DatabaseReference orderRef = FirebaseDatabase.getInstance().getReference("Orders").child(orderId);
@@ -216,66 +207,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    private void addToCart(Cart cartItem) {
-        try {
-            String userId = getSharedPreferences("user_prefs", MODE_PRIVATE).getString("current_user_id", null);
-            if (userId == null) {
-                showToast("Please login to add to cart");
-                return;
-            }
-            dbCart = FirebaseDatabase.getInstance().getReference().child("Cart").child(userId);
-            dbCart.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    boolean isExists = false;
-                    if (snapshot.exists()) {
-                        for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                            Cart existingCart = dataSnapshot.getValue(Cart.class);
-                            existingCart.setCartId(dataSnapshot.getKey());
-                            if (existingCart != null && existingCart.getFoodId().equals(cartItem.getFoodId())) {
-                                int newQuantity = existingCart.getQuantity() + cartItem.getQuantity();
-                                dataSnapshot.getRef().child("quantity").setValue(newQuantity);
-                                dataSnapshot.getRef().child("total_price").setValue(cartItem.getTotal_price() * newQuantity);
-                                isExists = true;
-                                showToast("Increased quantity in cart");
-                                break;
-                            }
-                        }
-                    }
 
-                    if (!isExists) {
-                        Cart newCart = new Cart(userId, cartItem.getTotal_price(), cartItem.getQuantity(), cartItem.getFoodId());
-                        dbCart.push().setValue(newCart).addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                showToast("Added to cart");
-                            } else {
-                                showToast("Failed to add to cart");
-                            }
-                        });
-                    }
-                }
-
-                @Override
-                public void onCancelled(@NonNull DatabaseError error) {
-                    showToast(error.getMessage());
-                }
-            });
-        } catch (Exception e) {
-            showToast(e.getMessage());
-        }
-    }
-
-
-
-    private void reorderItems(List<Cart> orderedItems) {
-        for (Cart item : orderedItems) {
-            addToCart(item);
-        }
-
-        Intent intent = new Intent(OrderDetailActivity.this, NavigationActivity.class);
-        intent.putExtra("openCartFragment", true);
-        startActivity(intent);
-    }
 
     private void showToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
