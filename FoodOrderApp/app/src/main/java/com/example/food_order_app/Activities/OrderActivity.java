@@ -1,10 +1,13 @@
 package com.example.food_order_app.Activities;
 
+import android.Manifest;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
@@ -167,11 +170,9 @@ public class OrderActivity extends AppCompatActivity {
         order.setOrderNote(orderNoteInput.getText().toString());
         order.setOrderTotal(totalAmount);
         order.setOrderedItems(cartItems);
-        if (currentUser != null) {
+
             order.setUserId(userId);
-        } else {
-            Toast.makeText(this, "User is not logged in.", Toast.LENGTH_SHORT).show();
-        }
+
         order.setOrderDate(String.valueOf(System.currentTimeMillis()));
         order.setOrderStatus("waiting");
     }
