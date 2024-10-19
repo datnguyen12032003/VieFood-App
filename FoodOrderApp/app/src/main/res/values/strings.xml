@@ -15,6 +15,7 @@
         <item>Cancelled</item>
         <item>Waiting</item>
         <item>Success</item>
+        <item>New</item>
     </string-array>
 
 </resources>

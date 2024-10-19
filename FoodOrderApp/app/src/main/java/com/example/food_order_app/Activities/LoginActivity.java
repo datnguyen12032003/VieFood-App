@@ -1,6 +1,9 @@
 package com.example.food_order_app.Activities;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.InputType;
 import android.widget.Button;
@@ -11,7 +14,10 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationCompat;
+import androidx.core.app.NotificationManagerCompat;
 
+import com.example.food_order_app.Models.Notification;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
 import com.google.firebase.database.DataSnapshot;
@@ -20,22 +26,23 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Button btnLogin;
     private ImageButton btnBack, btnTogglePassword;
     private EditText etEmail, etPassword;
     private boolean isPasswordVisible = false;
-    private DatabaseReference dbUsers;
+    private DatabaseReference dbUsers, dbNotifications;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-
         setContentView(R.layout.activity_login);
 
         dbUsers = FirebaseDatabase.getInstance().getReference("Users");
+        dbNotifications = FirebaseDatabase.getInstance().getReference("Notifications");
 
         btnLogin = findViewById(R.id.btn_login);
         btnBack = findViewById(R.id.btn_back);
@@ -43,13 +50,8 @@ public class LoginActivity extends AppCompatActivity {
         etPassword = findViewById(R.id.txt_password);
         btnTogglePassword = findViewById(R.id.btn_toggle_password);
 
-        // Nút quay lại
         btnBack.setOnClickListener(view -> startActivity(new Intent(LoginActivity.this, MainActivity.class)));
-
-        // Nút ẩn/hiện mật khẩu
         btnTogglePassword.setOnClickListener(view -> togglePasswordVisibility());
-
-        // Nút đăng nhập
         btnLogin.setOnClickListener(view -> validateLogin());
 
         TextView txtForgotPassword = findViewById(R.id.txt_forgot_password);
@@ -57,6 +59,17 @@ public class LoginActivity extends AppCompatActivity {
             Intent intent = new Intent(LoginActivity.this, ForgotPasswordActivity.class);
             startActivity(intent);
         });
+
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("AdminChannel",
+                    "Order Notifications",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
+        }
     }
 
     private void validateLogin() {
@@ -95,6 +108,9 @@ public class LoginActivity extends AppCompatActivity {
                                 .putBoolean("admin", isAdmin)
                                 .apply();
 
+                        if (isAdmin) {
+                            fetchAndNotifyAdmin();
+                        }
                         redirectToAppropriateActivity(isAdmin);
                         isLoggedIn = true;
                         break;
@@ -111,6 +127,37 @@ public class LoginActivity extends AppCompatActivity {
                 Toast.makeText(LoginActivity.this, "Login failed", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void fetchAndNotifyAdmin() {
+        dbNotifications.orderByChild("type").equalTo("order").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    Notification notification = snapshot.getValue(Notification.class);
+                    if (notification != null && !notification.isSeen()) {
+                        sendAdminNotification(notification.getMessage());
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(LoginActivity.this, "Failed to load notifications", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void sendAdminNotification(String message) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "AdminChannel")
+                .setSmallIcon(R.drawable.food_icon)
+                .setContentTitle("Admin Notification")
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }
 
     private void redirectToAppropriateActivity(boolean isAdmin) {

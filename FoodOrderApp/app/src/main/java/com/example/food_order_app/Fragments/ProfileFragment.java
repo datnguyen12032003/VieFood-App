@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.food_order_app.Activities.ChangePasswordActivity;
 import com.example.food_order_app.Activities.FavouriteActivity;
+import com.example.food_order_app.Activities.NotificationActivity;
 import com.example.food_order_app.Activities.OrderHistoryActivity;
 import com.example.food_order_app.Activities.OrderHistoryAdminActivity;
 import com.example.food_order_app.Activities.ProfileActivity;
@@ -96,6 +97,23 @@ public class ProfileFragment extends Fragment {
             }
         });
 
+        Button btnNotification = view.findViewById(R.id.btnNotification);
+
+        btnNotification.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), NotificationActivity.class);
+                String userId = getActivity().getSharedPreferences("user_prefs", getActivity().MODE_PRIVATE)
+                        .getString("current_user_id", null);
+                boolean isAdmin = getActivity().getSharedPreferences("user_prefs", getActivity().MODE_PRIVATE)
+                        .getBoolean("admin", false);
+                intent.putExtra("isAdmin", isAdmin);
+                intent.putExtra("userId", userId);
+                startActivity(intent);
+            }
+        });
+
+
 
         btnEditProfile.setOnClickListener(v -> {
             Intent intent = new Intent(getActivity(), ProfileActivity.class);
@@ -128,7 +146,6 @@ public class ProfileFragment extends Fragment {
                         if (currentUser != null) {
                             userNameTextView.setText(currentUser.getUserName());
                             userPhoneTextView.setText(currentUser.getUserPhone());
-                            // Use 'ProfileFragment.this' instead of 'getActivity()'
                             Glide.with(ProfileFragment.this)
                                     .load(currentUser.getAvatarUrl())
                                     .apply(RequestOptions.circleCropTransform())
@@ -159,7 +176,7 @@ public class ProfileFragment extends Fragment {
     }
 
     private void showToast(String message) {
-        if (getActivity() != null) { // Check if getActivity() is not null
+        if (getActivity() != null) {
             Toast.makeText(getActivity(), message, Toast.LENGTH_SHORT).show();
         }
     }
