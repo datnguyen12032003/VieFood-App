@@ -38,7 +38,8 @@ public class OrderDetailActivity extends AppCompatActivity {
     private OrderAdapter orderAdapter;
     private TextView orderIdTextView, orderStatusTextView, orderTotalTextView, orderAddressTextView, orderPhoneTextview, orderNoteTextView, orderDateTextview;
     private TextView orderSubtotalTextView, orderDeliveryTextView, orderDiscountTextView;
-    private DatabaseReference dbCart;
+    private TextView orderUserNameTextView, orderEmailTextView;
+    private DatabaseReference dbCart, dbUser;
     private Button updateStatusButton, reorderButton;
 
     private ImageView icBack;
@@ -58,7 +59,10 @@ public class OrderDetailActivity extends AppCompatActivity {
         String orderNote = getIntent().getStringExtra("orderNote");
         String orderDate = getIntent().getStringExtra("orderDate");
         List<Cart> orderedItems = (List<Cart>) getIntent().getSerializableExtra("orderedItems");
-
+        String userId = getIntent().getStringExtra("userId");
+        fetchUserInfo(userId);
+        orderUserNameTextView = findViewById(R.id.orderUserName);
+        orderEmailTextView = findViewById(R.id.orderEmail);
         icBack = findViewById(R.id.ic_back);
 
         reorderButton = findViewById(R.id.reorderButton);
@@ -146,6 +150,29 @@ public class OrderDetailActivity extends AppCompatActivity {
         recyclerViewOrderDetails.setLayoutManager(new LinearLayoutManager(this));
         orderAdapter = new OrderAdapter(orderedItems);
         recyclerViewOrderDetails.setAdapter(orderAdapter);
+    }
+
+    private void fetchUserInfo(String userId) {
+        dbUser = FirebaseDatabase.getInstance().getReference("Users").child(userId);
+        dbUser.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    User user = snapshot.getValue(User.class);
+                    if (user != null) {
+                        orderUserNameTextView.setText("Username: " + user.getUserName());
+                        orderEmailTextView.setText("Email: " + user.getUserEmail());
+                    }
+                } else {
+                    showToast("User not found");
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+                showToast("Failed to load user info: " + error.getMessage());
+            }
+        });
     }
 
     private String formatDate(String orderDate) {

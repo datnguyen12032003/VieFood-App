@@ -24,11 +24,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.food_order_app.Adapters.OrderAdapter;
 import com.example.food_order_app.Models.Cart;
+import com.example.food_order_app.Models.Notification;
 import com.example.food_order_app.Models.Order;
 import com.example.food_order_app.Models.User;
 import com.example.food_order_app.R;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.text.NumberFormat;
 import java.util.HashMap;
@@ -117,8 +121,6 @@ public class OrderActivity extends AppCompatActivity {
         builder.setNegativeButton("No", (dialog, which) -> dialog.dismiss());
         builder.show();
     }
-
-
     private void placeOrder(List<Cart> cartItems) {
         String orderId = dbOrders.push().getKey();
         if (orderId != null) {
@@ -136,12 +138,20 @@ public class OrderActivity extends AppCompatActivity {
             orderDetails.put("orderedItems", cartItems);
             orderDetails.put("userId", userId);
             orderDetails.put("orderDate", String.valueOf(System.currentTimeMillis()));
-            orderDetails.put("orderStatus", "waiting");
+            orderDetails.put("orderStatus", "Waiting");
 
             dbOrders.child(orderId).setValue(orderDetails).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(this, "Order placed successfully!", Toast.LENGTH_SHORT).show();
-                    sendNotification("Order Confirmation", "Your order has been placed successfully!");
+                    sendNotificationToUser("Your order (ID: " + orderId + ") has been placed successfully!");
+
+                    SharedPreferences sharedPreferences = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                    boolean isAdmin = sharedPreferences.getBoolean("admin", false);
+
+                    if (!isAdmin) {
+                        notifyAllAdmins("New order \nOrder ID: " + orderId + ", please check");
+                    }
+
                     Intent intent = new Intent(OrderActivity.this, NavigationActivity.class);
                     intent.putExtra("openCartFragment", true);
                     startActivity(intent);
@@ -155,6 +165,69 @@ public class OrderActivity extends AppCompatActivity {
         } else {
             Toast.makeText(this, "Failed to generate order ID.", Toast.LENGTH_SHORT).show();
         }
+    }
+
+
+    private void notifyAllAdmins(String message) {
+        DatabaseReference dbUsers = FirebaseDatabase.getInstance().getReference("Users");
+        dbUsers.orderByChild("admin").equalTo(true).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                    String adminUserId = snapshot.getKey();
+                    String formattedMessage = "New Order\nOrder code is " + order.getOrderId();
+
+                    saveNotificationToFirebase("New Order", formattedMessage, adminUserId, "order", order.getOrderId());
+                    sendAdminNotification(formattedMessage);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Toast.makeText(OrderActivity.this, "Failed to notify admins", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+
+    private void saveNotificationToFirebase(String title, String message, String userId, String type, String orderId) {
+        DatabaseReference dbNotifications = FirebaseDatabase.getInstance().getReference("Notifications");
+        String notificationId = dbNotifications.push().getKey();
+
+        if (notificationId != null) {
+            Notification notification = new Notification(notificationId, userId, message , String.valueOf(System.currentTimeMillis()), type, orderId, false );
+            dbNotifications.child(notificationId).setValue(notification).addOnCompleteListener(task -> {
+                if (!task.isSuccessful()) {
+                    Toast.makeText(this, "Failed to save notification.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
+
+
+    private void sendNotificationToUser(String message) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "order_channel")
+                .setSmallIcon(R.drawable.food_icon)
+                .setContentTitle("Order Confirmation")
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
+    }
+
+    private void sendAdminNotification(String message) {
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "admin_channel")
+                .setSmallIcon(R.drawable.food_icon)
+                .setContentTitle("Order Notification")
+                .setStyle(new NotificationCompat.BigTextStyle().bigText(message))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setAutoCancel(true);
+
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
     }
 
 
@@ -184,33 +257,6 @@ public class OrderActivity extends AppCompatActivity {
     private String formatNumber(double amount) {
         return NumberFormat.getInstance(Locale.getDefault()).format(amount);
     }
-
-    private void sendNotification(String title, String message) {
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            String channelId = "order_channel";
-            CharSequence name = "Order Notifications";
-            String description = "Channel for order notifications";
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
-            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
-            channel.setDescription(description);
-            NotificationManager notificationManager = getSystemService(NotificationManager.class);
-            if (notificationManager != null) {
-                notificationManager.createNotificationChannel(channel);
-            }
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(this, "order_channel")
-                .setSmallIcon(R.drawable.food_icon)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-                .setAutoCancel(true);
-
-        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-        notificationManager.notify((int) System.currentTimeMillis(), builder.build());
-    }
-
 
     private void setupRecyclerView() {
         recyclerViewOrderProducts.setLayoutManager(new LinearLayoutManager(this));

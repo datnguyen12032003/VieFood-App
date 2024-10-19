@@ -60,6 +60,7 @@ public class OrderHistoryAdminAdapter extends RecyclerView.Adapter<OrderHistoryA
         Intent intent = new Intent(view.getContext(), OrderDetailActivity.class);
         intent.putExtra("orderId", order.getOrderId());
         intent.putExtra("orderAddress", order.getOrderAddress());
+        intent.putExtra("userId", order.getUserId());
         intent.putExtra("orderPhone", order.getOrderPhone());
         intent.putExtra("orderStatus", order.getOrderStatus());
         intent.putExtra("orderTotal", order.getOrderTotal());

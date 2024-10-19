@@ -1,6 +1,7 @@
 package com.example.food_order_app.Activities;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -17,8 +18,12 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class OrderHistoryAdminActivity extends AppCompatActivity {
 
@@ -102,10 +107,25 @@ public class OrderHistoryAdminActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 orderList.clear();
+                long currentTime = System.currentTimeMillis();
+                long oneHourAgo = currentTime - 60 * 60 * 1000;
+
                 for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
                     Order order = orderSnapshot.getValue(Order.class);
-                    if (status.equals("All") || order.getOrderStatus().equals(status)) {
+
+                    long orderDateLong = convertOrderDateToLong(order.getOrderDate());
+
+                    if (status.equals("All")) {
                         orderList.add(order);
+                    } else if (status.equals("New")) {
+                        if (orderDateLong >= oneHourAgo) {
+                            orderList.add(order);
+                        }
+                    } else {
+                        // Nếu không phải "New", kiểm tra orderStatus
+                        if (order.getOrderStatus().equals(status)) {
+                            orderList.add(order);
+                        }
                     }
                 }
                 orderHistoryAdminAdapter.notifyDataSetChanged();
@@ -113,10 +133,25 @@ public class OrderHistoryAdminActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError error) {
-
+                // Xử lý lỗi nếu cần
             }
         });
     }
+
+
+
+    private long convertOrderDateToLong(String orderDate) {
+        try {
+            return Long.parseLong(orderDate);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+            Log.e("OrderHistoryAdmin", "Error parsing date: " + orderDate);
+            return 0; // Nếu có lỗi, trả về 0
+        }
+    }
+
+
+
 
     @Override
     protected void onResume() {
