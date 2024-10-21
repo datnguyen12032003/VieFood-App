@@ -15,7 +15,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.food_order_app.Activities.FoodDetailActivity;
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.R;
-import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
