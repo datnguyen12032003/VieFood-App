@@ -47,6 +47,8 @@ public class MenuFragment extends Fragment {
         super.onCreate(savedInstanceState);
         dbFoodItems = FirebaseDatabase.getInstance().getReferenceFromUrl("https://viefood-da6a0-default-rtdb.firebaseio.com/").child("FoodItems");
         foodItemList = new ArrayList<>(); // Khởi tạo danh sách món ăn
+
+
     }
 
     @Override
@@ -56,13 +58,21 @@ public class MenuFragment extends Fragment {
         initializeViews(v);
         setupRecyclerView();
         loadFoodItems();
-        resetButtonColors();
+        if (getArguments() != null) {
+            String selectedCategory = getArguments().getString("selected_category");
+            if (selectedCategory != null) {
+                selectCategory(selectedCategory);  // Gọi hàm selectCategory để đổi màu và lọc món ăn
+            }
+        } else {
+            resetButtonColors(); // Nếu không có category nào được truyền, reset màu nút
+        }
+
         return v;
     }
 
     private void loadFoodItems() {
         progressBar.setVisibility(View.VISIBLE);
-        rcv.setVisibility(View.GONE); // Ẩn RecyclerView
+        rcv.setVisibility(View.GONE);
 
         dbFoodItems.addValueEventListener(new ValueEventListener() {
             @Override
@@ -76,15 +86,22 @@ public class MenuFragment extends Fragment {
                         foodItemList.add(foodItem);
                     }
                 }
-                adapter.setData(foodItemList);  // Ẩn ProgressBar và hiển thị RecyclerView
+                adapter.setData(foodItemList);
                 progressBar.setVisibility(View.GONE);
                 rcv.setVisibility(View.VISIBLE);
+
+                if (getArguments() != null) {
+                    String selectedCategory = getArguments().getString("selected_category");
+                    if (selectedCategory != null) {
+                        filterFoodItemsByCategory(selectedCategory);
+                    }
+                }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 Toast.makeText(getContext(), "Failed to load food items", Toast.LENGTH_SHORT).show();
-                progressBar.setVisibility(View.GONE); // Ẩn ProgressBar nếu có lỗi
+                progressBar.setVisibility(View.GONE);
             }
         });
     }
@@ -167,19 +184,18 @@ public class MenuFragment extends Fragment {
     private void filterFoodItemsBySearch(String string) {
         List<FoodItem> filteredList = new ArrayList<>();
         for (FoodItem foodItem : foodItemList) {
-            // Kiểm tra xem tên món ăn có chứa từ khóa tìm kiếm hay không
             if (foodItem.getName().toLowerCase().contains(string.toLowerCase())) {
                 filteredList.add(foodItem);
             }
         }
         adapter.setData(filteredList);
+
     }
 
     private void selectCategory(String category) {
-        resetButtonColors(); // Đặt lại màu sắc của tất cả các nút
-        setSelectedButtonColor(category); // Đổi màu cho nút được chọn
+        resetButtonColors();
+        setSelectedButtonColor(category);
         filterFoodItemsByCategory(category);
-        // Lọc danh sách món ăn theo category
     }
 
     private void setSelectedButtonColor(String category) {
@@ -231,7 +247,7 @@ public class MenuFragment extends Fragment {
         btn_dessert.setBackgroundResource(R.drawable.button_category_selector);
     }
 
-    // Hàm lọc danh sách món ăn theo category
+
     private void filterFoodItemsByCategory(String category) {
         List<FoodItem> filteredList = new ArrayList<>();
         txt_title.setText(category);

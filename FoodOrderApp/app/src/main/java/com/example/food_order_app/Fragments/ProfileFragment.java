@@ -141,7 +141,7 @@ public class ProfileFragment extends Fragment {
             dbUsers.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    if (isAdded() && dataSnapshot.exists()) { // Check if fragment is added
+                    if (isAdded() && dataSnapshot.exists()) {
                         User currentUser = dataSnapshot.getValue(User.class);
                         if (currentUser != null) {
                             userNameTextView.setText(currentUser.getUserName());
