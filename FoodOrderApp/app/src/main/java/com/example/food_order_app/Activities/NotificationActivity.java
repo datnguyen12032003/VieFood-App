@@ -72,7 +72,7 @@ public class NotificationActivity extends AppCompatActivity {
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         Notification notification = snapshot.getValue(Notification.class);
                         if (notification != null) {
-                            notificationList.add(notification);
+                            notificationList.add(0, notification);
                             if (!notification.isSeen()) {
                                 sendAdminNotification(notification.getMessage());
                             }                        }

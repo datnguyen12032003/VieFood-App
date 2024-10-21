@@ -1,6 +1,7 @@
 package com.example.food_order_app.Adapters;
 
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,10 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.FoodItemViewHo
     public void setData(List<FoodItem> foodItemList) {
         this.foodItemList = foodItemList;
         notifyDataSetChanged();
+        Log.d("MenuAdapter", "Menu adapter is: " + foodItemList.size());
+
     }
+
 
     @NonNull
     @Override

@@ -2,6 +2,7 @@ package com.example.food_order_app.Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -17,7 +18,7 @@ import com.example.food_order_app.databinding.ActivityNavigationBinding;
 
 public class NavigationActivity extends AppCompatActivity {
 
-    ActivityNavigationBinding binding;
+    public ActivityNavigationBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +59,12 @@ public class NavigationActivity extends AppCompatActivity {
         });
     }
 
-    private void openFragment(Fragment fragment) {
+    public void openFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.frame_layout_bottom_navigation, fragment) // Thay R.id.fragment_container bằng ID của container trong layout
+                .replace(R.id.frame_layout_bottom_navigation, fragment)
                 .commit();
+        String fragmentName = fragment.getClass().getSimpleName();
+        Log.d("NavigationActivity", "Opened Fragment: " + fragmentName);
     }
 
     private void logout() {
