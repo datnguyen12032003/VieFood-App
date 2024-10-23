@@ -2,10 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/menu"
-        android:icon="@drawable/ic_menu"
-        android:title="Menu"/>
-    <item
         android:id="@+id/dashboard"
         android:icon="@drawable/ic_dashboard"
         android:title="Dashboard"/>
