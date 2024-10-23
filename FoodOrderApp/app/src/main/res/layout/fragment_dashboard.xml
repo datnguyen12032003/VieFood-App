@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:padding="10dp"
     android:id="@+id/fragment_dashboard"
-    android:background="@color/lighter_gray">
+    android:background="@color/white">
 
     <!-- Nút thêm sản phẩm -->
     <Button
