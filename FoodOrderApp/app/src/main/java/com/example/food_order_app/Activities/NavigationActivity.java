@@ -70,7 +70,7 @@ public class NavigationActivity extends AppCompatActivity {
     private void logout() {
         new AlertDialog.Builder(this)
                 .setTitle("Logout")
-                .setMessage("Are you sure you want to delete?")
+                .setMessage("Are you sure you want to logout?")
                 .setPositiveButton("Yes", (dialog, which) -> {
                     // Xóa thông tin đăng nhập từ SharedPreferences
                     getSharedPreferences("user_prefs", MODE_PRIVATE)
