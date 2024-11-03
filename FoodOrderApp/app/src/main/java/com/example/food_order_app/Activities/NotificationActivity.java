@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -61,6 +62,9 @@ public class NotificationActivity extends AppCompatActivity {
 //                manager.createNotificationChannel(channel);
 //            }
 //        }
+
+        ImageView ivBack = findViewById(R.id.ivBack);
+        ivBack.setOnClickListener(v -> finish());
 
         dbNotifications = FirebaseDatabase.getInstance().getReference("Notifications");
 
