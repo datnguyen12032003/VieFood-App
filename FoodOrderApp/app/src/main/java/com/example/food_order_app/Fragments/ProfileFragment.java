@@ -35,7 +35,7 @@ public class ProfileFragment extends Fragment {
     private TextView userPhoneTextView;
     private DatabaseReference dbUsers;
     private ImageView imageAvatar;
-    private Button btnFavourite, btnOrder;
+    private Button btnFavourite, btnOrder, btnNotify;
 
     public ProfileFragment() {
     }
@@ -56,7 +56,7 @@ public class ProfileFragment extends Fragment {
         Button btnChangePassword = view.findViewById(R.id.btnChangePassword);
         Button btnEditProfile = view.findViewById(R.id.btnEditProfile);
         btnOrder = view.findViewById(R.id.btnOrder);
-        btnFavourite = view.findViewById(R.id.btn_favourite);
+        btnFavourite = view.findViewById(R.id.btnFavourite);
 
         // Load user data after view has been created
         fetchUserData();
@@ -97,9 +97,9 @@ public class ProfileFragment extends Fragment {
             }
         });
 
-        Button btnNotification = view.findViewById(R.id.btnNotification);
+        btnNotify = view.findViewById(R.id.btnNotification);
 
-        btnNotification.setOnClickListener(new View.OnClickListener() {
+        btnNotify.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(getActivity(), NotificationActivity.class);
@@ -146,6 +146,15 @@ public class ProfileFragment extends Fragment {
                         if (currentUser != null) {
                             userNameTextView.setText(currentUser.getUserName());
                             userPhoneTextView.setText(currentUser.getUserPhone());
+
+                            if (currentUser.isAdmin()) {
+                                btnNotify.setVisibility(View.VISIBLE); // Hiển thị nút Notify cho admin
+                                btnFavourite.setVisibility(View.GONE); // Ẩn nút Favourite cho admin
+                            } else {
+                                btnNotify.setVisibility(View.GONE); // Ẩn nút Notify cho người dùng thường
+                                btnFavourite.setVisibility(View.VISIBLE); // Hiển thị nút Favourite cho người dùng thường
+                            }
+
                             Glide.with(ProfileFragment.this)
                                     .load(currentUser.getAvatarUrl())
                                     .apply(RequestOptions.circleCropTransform())
