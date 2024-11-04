@@ -166,6 +166,15 @@ public class FoodDetailActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         adapter = new CommentsAdapter(reviewList);
         recyclerView.setAdapter(adapter);
+
+
+        // Kiểm tra số lượng bình luận
+        if (reviewList.isEmpty()) {
+            recyclerView.setVisibility(View.GONE); // Ẩn RecyclerView
+            findViewById(R.id.txt_no_reviews).setVisibility(View.VISIBLE); // Hiện thông báo chưa có bình luận
+        } else {
+            recyclerView.setVisibility(View.VISIBLE); // Hiện RecyclerView
+        }
     }
 
     private void initUI() {
@@ -192,6 +201,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                     foodItem = snapshot.getValue(FoodItem.class);
                     displayFoodDetails(snapshot);
                     loadReview();
+                    setupRecyclerView();
                     checkIfFavorite(strFoodId);
                     if (foodItem != null && foodItem.getFoodId() != null) {
                         checkIfFavorite(snapshot.getKey());
@@ -253,6 +263,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                     }
                 }
                 adapter.setData(reviewList);
+                setupRecyclerView();
                 txt_no_reviews.setVisibility(reviewList.isEmpty() ? View.VISIBLE : View.GONE);
             }
 
@@ -327,6 +338,7 @@ public class FoodDetailActivity extends AppCompatActivity {
                 float averageRating = (count > 0) ? totalRating / count : newRating;
                 dbFoodItem.child("rating").setValue(averageRating);
                 loadContent();
+                setupRecyclerView();
             }
 
             @Override

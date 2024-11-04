@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.example.food_order_app.Activities.NavigationActivity;
@@ -33,12 +34,12 @@ public class HomeFragment extends Fragment {
     private RecyclerView recyclerView;
     private FoodHomeAdapter foodHomeAdapter;
     private List<FoodItem> foodItems;
+    private ProgressBar progressBar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         foodItems = new ArrayList<>();
-        fetchFoodItems();
     }
 
     @Nullable
@@ -49,15 +50,16 @@ public class HomeFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recycler_view_popular);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
         TextView seeAll = view.findViewById(R.id.see_all);
-
-        view.findViewById(R.id.image_dishes).setOnClickListener(v -> openMenuFragment("Dishes"));
-        view.findViewById(R.id.image_pizza).setOnClickListener(v -> openMenuFragment("Pizza"));
-        view.findViewById(R.id.image_burger).setOnClickListener(v -> openMenuFragment("Burger"));
-        view.findViewById(R.id.image_drink).setOnClickListener(v -> openMenuFragment("Drinks"));
-        view.findViewById(R.id.image_dessert).setOnClickListener(v -> openMenuFragment("Dessert"));
+        progressBar = view.findViewById(R.id.progress_bar);
+        view.findViewById(R.id.dishes).setOnClickListener(v -> openMenuFragment("Dishes"));
+        view.findViewById(R.id.pizza).setOnClickListener(v -> openMenuFragment("Pizza"));
+        view.findViewById(R.id.burger).setOnClickListener(v -> openMenuFragment("Burger"));
+        view.findViewById(R.id.drinks).setOnClickListener(v -> openMenuFragment("Drinks"));
+        view.findViewById(R.id.dessert).setOnClickListener(v -> openMenuFragment("Dessert"));
 
         seeAll.setOnClickListener(v -> openMenuFragment(null));
 
+        fetchFoodItems();
         return view;
     }
 
@@ -76,6 +78,8 @@ public class HomeFragment extends Fragment {
 
 
     private void fetchFoodItems() {
+        progressBar.setVisibility(View.VISIBLE);
+        recyclerView.setVisibility(View.GONE);
         DatabaseReference dbFoodItems = FirebaseDatabase.getInstance().getReference("FoodItems");
         dbFoodItems.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -98,6 +102,8 @@ public class HomeFragment extends Fragment {
 
                 foodHomeAdapter = new FoodHomeAdapter(foodItems);
                 recyclerView.setAdapter(foodHomeAdapter);
+                progressBar.setVisibility(View.GONE);
+                recyclerView.setVisibility(View.VISIBLE);
             }
 
             @Override

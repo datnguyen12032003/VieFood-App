@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     tools:context=".Fragments.HomeFragment">
 
@@ -11,21 +13,26 @@
 
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:layout_margin="10dp"
-     android:layout_gravity="center"
-        android:orientation="horizontal"
-        android:padding="16dp">
+        android:orientation="horizontal">
 
         <!-- Danh mục 1 -->
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/dishes"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="6dp"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/food_item"
+            android:elevation="1dp"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="6dp"
+            android:translationZ="1dp">
 
             <ImageView
                 android:id="@+id/image_dishes"
@@ -42,12 +49,19 @@
 
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/pizza"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="6dp"
+            android:layout_margin="6dp"
+            android:layout_marginHorizontal="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/food_item"
+            android:elevation="1dp"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="6dp"
+            android:translationZ="1dp">
 
             <ImageView
                 android:id="@+id/image_pizza"
@@ -63,12 +77,18 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/burger"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="6dp"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/food_item"
+            android:elevation="1dp"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="6dp"
+            android:translationZ="1dp">
 
             <ImageView
                 android:id="@+id/image_burger"
@@ -84,12 +104,18 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/drinks"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="6dp"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/food_item"
+            android:elevation="1dp"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="6dp"
+            android:translationZ="1dp">
 
             <ImageView
                 android:id="@+id/image_drink"
@@ -105,12 +131,18 @@
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/dessert"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:padding="6dp"
+            android:layout_margin="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/food_item"
+            android:elevation="1dp"
             android:gravity="center_horizontal"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="6dp"
+            android:translationZ="1dp">
 
             <ImageView
                 android:id="@+id/image_dessert"
@@ -144,25 +176,25 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
-       <LinearLayout
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
 
-           <ImageView
-               android:layout_width="120dp"
-               android:layout_height="100dp"
-               android:src="@drawable/image_banner" />
+            <ImageView
+                android:layout_width="120dp"
+                android:layout_height="100dp"
+                android:src="@drawable/image_banner" />
 
-           <TextView
-               android:layout_width="wrap_content"
-               android:layout_height="wrap_content"
-               android:layout_marginTop="4dp"
-               android:layout_marginLeft="10dp"
-               android:textColor="@android:color/black"
-               android:text="California-style pizza Sicilian pizza with Burger or French fries or 1 free Coca cola drink."
-               android:textSize="12sp" />
-       </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="4dp"
+                android:text="California-style pizza Sicilian pizza with Burger or French fries or 1 free Coca cola drink."
+                android:textColor="@android:color/black"
+                android:textSize="12sp" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -190,11 +222,32 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recycler_view_popular"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:padding="10dp" />
+        android:layout_height="wrap_content">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_popular"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/orange_dark"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </LinearLayout>
