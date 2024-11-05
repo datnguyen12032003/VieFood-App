@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.food_order_app.Activities.AddNewFoodActivity;
@@ -40,14 +41,14 @@ public class DashboardFragment extends Fragment {
     private List<FoodItem> foodItemList;
     private Button btnAddNewFood;
     private Spinner spinnerCategory;
-
+    private TextView tvItemCount;
     private DatabaseReference dbFoodItems;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         dbFoodItems = FirebaseDatabase.getInstance().getReferenceFromUrl("https://viefood-da6a0-default-rtdb.firebaseio.com/").child("FoodItems");
-        foodItemList = new ArrayList<>(); // Khởi tạo danh sách món ăn
+        foodItemList = new ArrayList<>();
     }
 
     @Override
@@ -63,6 +64,7 @@ public class DashboardFragment extends Fragment {
     private void initializeViews(View v) {
         rcv = v.findViewById(R.id.recyclerView);
         btnAddNewFood = v.findViewById(R.id.btnAddNewFood);
+        tvItemCount = v.findViewById(R.id.tvItemCount);
     }
 
     private void setupRecyclerView() {
@@ -82,6 +84,9 @@ public class DashboardFragment extends Fragment {
         rcv.setAdapter(adapter);
     }
 
+    private void updateItemCount() {
+        tvItemCount.setText("Total Food Items: " + foodItemList.size()); // Update the TextView with the size of the list
+    }
 
     private void setupButtonListeners() {
         btnAddNewFood.setOnClickListener(v -> {
@@ -121,6 +126,7 @@ public class DashboardFragment extends Fragment {
                     foodItemList.add(foodItem);
                 }
                 adapter.setData(foodItemList);
+                updateItemCount();
             }
 
             @Override
@@ -215,6 +221,5 @@ public class DashboardFragment extends Fragment {
         foodItemList.remove(foodItem);
         adapter.notifyDataSetChanged();
     }
-
 
 }

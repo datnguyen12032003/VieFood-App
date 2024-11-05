@@ -16,7 +16,6 @@
         android:padding="16dp">
 
 
-        <!-- Toolbar/Cart Icon -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -70,7 +69,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="Giỏ hàng trống"
+                android:text="Empty Cart"
                 android:textSize="20dp"
                 android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="@+id/cartFragmentContainer"
@@ -100,7 +99,6 @@
                 app:layout_constraintTop_toTopOf="@+id/cartFragmentContainer" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <!-- Payment Summary Section -->
         <LinearLayout
             android:id="@+id/paymentSummaryContainer"
             android:layout_width="match_parent"

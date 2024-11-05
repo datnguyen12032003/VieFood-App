@@ -92,7 +92,7 @@
                     style="@style/ProfileButtonStyle"
                     android:background="@drawable/button_background"
                     android:drawableTop="@drawable/ic_favourite"
-                    android:text="Favourite"
+                    android:text="Favorite"
                     android:visibility="gone"
                 android:layout_weight="1" />
 

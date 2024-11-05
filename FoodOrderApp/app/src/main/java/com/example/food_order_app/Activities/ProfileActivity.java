@@ -36,6 +36,7 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView userNameTextView;
     private TextView userPhoneTextView;
     private TextView userAddressTextView;
+    private TextView userEmailTextView;
     private DatabaseReference dbUsers;
     private Uri imageUri; // Biến lưu URI của hình ảnh được chọn
     private String imageUrl;
@@ -51,6 +52,7 @@ public class ProfileActivity extends AppCompatActivity {
         userNameTextView = findViewById(R.id.userName);
         userPhoneTextView = findViewById(R.id.userPhone);
         userAddressTextView = findViewById(R.id.userAddress);
+        userEmailTextView = findViewById(R.id.userEmail);
         imageAvatar = findViewById(R.id.userAvatar); // Khởi tạo imageAvatar
         ImageButton backButton = findViewById(R.id.backButton);
         Button editButton = findViewById(R.id.editButton);
@@ -82,7 +84,7 @@ public class ProfileActivity extends AppCompatActivity {
                             userNameTextView.setText(currentUser.getUserName());
                             userPhoneTextView.setText(currentUser.getUserPhone());
                             userAddressTextView.setText(currentUser.getUserAddress());
-                            // Cập nhật hình ảnh avatar nếu có URL
+                            userEmailTextView.setText(currentUser.getUserEmail());
                             if (currentUser.getAvatarUrl() != null) {
                                 Glide.with(ProfileActivity.this).load(currentUser.getAvatarUrl()).error(R.drawable.ic_image_placeholder).into(imageAvatar);
                             }

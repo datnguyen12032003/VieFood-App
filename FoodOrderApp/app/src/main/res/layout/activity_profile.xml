@@ -57,6 +57,7 @@
             android:layout_height="100dp"
             android:layout_marginBottom="16dp"
             android:contentDescription="Image preview"
+            android:layout_gravity="center"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_image_placeholder" />
 
@@ -64,8 +65,9 @@
             android:id="@+id/btnChooseAvatar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/teal_200"
-            android:text="Upload New Avatar"
+            android:backgroundTint="@color/orange_dark"
+            android:layout_gravity="center"
+            android:text="Upload Avatar"
             android:textColor="@android:color/white"
             android:padding="10dp" />
     </LinearLayout>
@@ -83,6 +85,21 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:padding="15dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Email:"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/userEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/black"
+                android:textSize="22sp" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -146,7 +163,7 @@
             android:id="@+id/editButton"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="Edit Profile"
+            android:text="Update Profile"
             android:textColor="@android:color/white"
             android:padding="10dp"
             android:elevation="2dp" />
