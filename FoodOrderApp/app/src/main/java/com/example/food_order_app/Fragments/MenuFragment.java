@@ -44,6 +44,8 @@ public class MenuFragment extends Fragment {
     private EditText txt_search;
     private ImageView btn_sort;
     private boolean isAscending = true;
+    private String currentCategory = null;
+    private String currentSearchQuery = "";
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -162,62 +164,73 @@ public class MenuFragment extends Fragment {
 
         btn_sort.setOnClickListener(view -> {
             if (isAscending) {
-                sortFoodItemsByPriceAscending();
-                btn_sort.setImageResource(R.drawable.ic_sort_ascending);
+                isAscending = false;
             } else {
-                sortFoodItemsByPriceDescending();
-                btn_sort.setImageResource(R.drawable.ic_sort_descending);
+                isAscending = true;
             }
-            isAscending = !isAscending;
+            applyFilters();
         });
-
-
-
 
         txt_search.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                filterFoodItemsBySearch(charSequence.toString());
+                currentSearchQuery = charSequence.toString();
+                applyFilters();
             }
 
             @Override
-            public void afterTextChanged(Editable editable) {
-
-            }
+            public void afterTextChanged(Editable editable) {}
         });
 
-        btn_dishes.setOnClickListener(v1 -> selectCategory("Dishes"));
-        btn_pizza.setOnClickListener(v1 -> selectCategory("Pizza"));
-        btn_burger.setOnClickListener(v1 -> selectCategory("Burger"));
-        btn_drinks.setOnClickListener(v1 -> selectCategory("Drinks"));
-        btn_dessert.setOnClickListener(v1 -> selectCategory("Dessert"));
+        btn_dishes.setOnClickListener(v1 -> {
+            currentCategory = "Dishes";
+            selectCategory(currentCategory);
+            applyFilters();
+        });
+        btn_pizza.setOnClickListener(v1 -> {
+            currentCategory = "Pizza";
+            selectCategory(currentCategory);
+            applyFilters();
+        });
+        btn_burger.setOnClickListener(v1 -> {
+            currentCategory = "Burger";
+            selectCategory(currentCategory);
+            applyFilters();
+        });
+        btn_drinks.setOnClickListener(v1 -> {
+            currentCategory = "Drinks";
+            selectCategory(currentCategory);
+            applyFilters();
+        });
+        btn_dessert.setOnClickListener(v1 -> {
+            currentCategory = "Dessert";
+            selectCategory(currentCategory);
+            applyFilters();
+        });
     }
 
+    private void applyFilters() {
+        List<FoodItem> filteredList = new ArrayList<>(foodItemList);
 
-    private void sortFoodItemsByPriceAscending() {
-        foodItemList.sort((item1, item2) -> Double.compare(item1.getPrice(), item2.getPrice()));
-        adapter.setData(foodItemList);
-    }
 
-    private void sortFoodItemsByPriceDescending() {
-        foodItemList.sort((item1, item2) -> Double.compare(item2.getPrice(), item1.getPrice()));
-        adapter.setData(foodItemList);
-    }
-
-    private void filterFoodItemsBySearch(String string) {
-        List<FoodItem> filteredList = new ArrayList<>();
-        for (FoodItem foodItem : foodItemList) {
-            if (foodItem.getName().toLowerCase().contains(string.toLowerCase())) {
-                filteredList.add(foodItem);
-            }
+        if (currentCategory != null) {
+            filteredList.removeIf(foodItem -> !foodItem.getCategory().equalsIgnoreCase(currentCategory));
         }
-        adapter.setData(filteredList);
 
+        if (!currentSearchQuery.isEmpty()) {
+            filteredList.removeIf(foodItem -> !foodItem.getName().toLowerCase().contains(currentSearchQuery.toLowerCase()));
+        }
+
+        if (isAscending) {
+            filteredList.sort((item1, item2) -> Double.compare(item1.getPrice(), item2.getPrice()));
+        } else {
+            filteredList.sort((item1, item2) -> Double.compare(item2.getPrice(), item1.getPrice()));
+        }
+
+        adapter.setData(filteredList);
     }
 
     private void selectCategory(String category) {
