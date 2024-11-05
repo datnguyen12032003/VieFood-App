@@ -31,7 +31,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Hình ảnh pizza -->
             <ImageView
                 android:id="@+id/img_foodImage"
                 android:layout_width="match_parent"
@@ -131,7 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Chưa có đánh giá nào"
+                android:text="No reviews yet"
                 android:textColor="@android:color/darker_gray"
                 android:textSize="14sp"
                 android:visibility="gone" />

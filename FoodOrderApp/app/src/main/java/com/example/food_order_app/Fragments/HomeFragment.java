@@ -51,6 +51,7 @@ public class HomeFragment extends Fragment {
     private Handler handler;
     private int[] colors = {Color.RED, Color.GREEN, Color.BLUE, Color.YELLOW, Color.MAGENTA}; // Add your desired colors here
     private int currentColorIndex = 0;
+    private boolean isBannerOneVisible = true;
 private TextView headerText;
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -94,6 +95,7 @@ fetchUserData();
         fetchFoodItems();
         return view;
     }
+
 
     private void showToast(String message) {
         if (getActivity() != null) {
