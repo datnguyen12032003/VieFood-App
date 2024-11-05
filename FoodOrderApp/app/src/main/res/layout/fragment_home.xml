@@ -8,8 +8,23 @@
     android:orientation="vertical"
     tools:context=".Fragments.HomeFragment">
 
+    <TextView
+        android:id="@+id/header_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+    android:layout_marginTop="8dp"
+        android:text="Hello, !"
+    android:textSize="24sp"
+    android:textStyle="bold"
+    android:gravity="center" />
 
-    <!-- Khuyến mãi -->
+    <TextView
+        android:id="@+id/wishing_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="wishing you a delicious meal"
+        android:textSize="16sp"
+        android:gravity="center" />
 
 
     <LinearLayout
@@ -19,7 +34,6 @@
         android:layout_margin="10dp"
         android:orientation="horizontal">
 
-        <!-- Danh mục 1 -->
         <LinearLayout
             android:id="@+id/dishes"
             android:layout_width="0dp"

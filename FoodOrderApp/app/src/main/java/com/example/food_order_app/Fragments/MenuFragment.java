@@ -61,10 +61,10 @@ public class MenuFragment extends Fragment {
         if (getArguments() != null) {
             String selectedCategory = getArguments().getString("selected_category");
             if (selectedCategory != null) {
-                selectCategory(selectedCategory);  // Gọi hàm selectCategory để đổi màu và lọc món ăn
+                selectCategory(selectedCategory);
             }
         } else {
-            resetButtonColors(); // Nếu không có category nào được truyền, reset màu nút
+            resetButtonColors();
         }
 
         return v;

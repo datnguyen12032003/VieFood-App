@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.food_order_app.Activities.FoodDetailActivity;
@@ -21,7 +22,6 @@ import java.util.List;
 public class FoodHomeAdapter extends RecyclerView.Adapter<FoodHomeAdapter.FoodViewHolder> {
 
     private List<FoodItem> foodItems;
-
     public FoodHomeAdapter(List<FoodItem> foodItems) {
         this.foodItems = foodItems;
     }
@@ -36,28 +36,34 @@ public class FoodHomeAdapter extends RecyclerView.Adapter<FoodHomeAdapter.FoodVi
     @Override
     public void onBindViewHolder(@NonNull FoodViewHolder holder, int position) {
         FoodItem foodItem = foodItems.get(position);
-        holder.foodRating.setText(String.valueOf(foodItem.getRating()));
+
+        // Set the food image
         Glide.with(holder.itemView.getContext())
                 .load(foodItem.getImage())
                 .apply(new RequestOptions()
-                        .override(80, 80)
+                        .override(260, 180)
                         .centerCrop()
                         .transform(new RoundedCorners(20)))
                 .into(holder.foodImage);
 
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
+        // Set the food name
+        holder.foodName.setText(foodItem.getName());
 
+        // Set the rating text
+        holder.foodRating.setText(String.valueOf(foodItem.getRating()));
+
+        // Set the price text
+        holder.foodPrice.setText(foodItem.getPrice() + "$");
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(holder.itemView.getContext(), FoodDetailActivity.class);
-                String foodId = foodItem.getFoodId();
-                intent.putExtra("foodId", foodId);
+                intent.putExtra("foodId", foodItem.getFoodId());
                 intent.putExtra("foodPrice", foodItem.getPrice());
-
                 holder.itemView.getContext().startActivity(intent);
             }
         });
-
     }
 
     @Override
@@ -66,13 +72,17 @@ public class FoodHomeAdapter extends RecyclerView.Adapter<FoodHomeAdapter.FoodVi
     }
 
     public static class FoodViewHolder extends RecyclerView.ViewHolder {
-        ImageView foodImage;
-        TextView foodRating;
+        ImageView foodImage, starIcon;
+        TextView foodName, foodRating, foodPrice, addButton;
 
         public FoodViewHolder(@NonNull View itemView) {
             super(itemView);
-            foodImage = itemView.findViewById(R.id.image_food);
-            foodRating = itemView.findViewById(R.id.text_food_rating);
+            foodImage = itemView.findViewById(R.id.foodImage);
+            foodName = itemView.findViewById(R.id.foodName);
+            foodRating = itemView.findViewById(R.id.ratingTxt);
+            starIcon = itemView.findViewById(R.id.imageView7);
+            foodPrice = itemView.findViewById(R.id.priceTxt);
+            addButton = itemView.findViewById(R.id.textView13);
         }
     }
 }

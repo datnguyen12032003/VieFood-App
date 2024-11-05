@@ -17,6 +17,7 @@ import com.bumptech.glide.Glide;
 import com.example.food_order_app.Activities.FoodDetailActivity;
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.R;
+import com.example.food_order_app.Utils.RoundedCornersTransformation;
 
 import java.util.List;
 
@@ -55,7 +56,13 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.FoodItemViewHo
         if (foodItem == null) {
             return;
         }
-        Glide.with(holder.itemView.getContext()).load(foodItem.getImage()).error(R.drawable.ic_image_placeholder).into(holder.foodImage);
+
+        Glide.with(holder.itemView.getContext())
+                .load(foodItem.getImage())
+                .error(R.drawable.ic_image_placeholder)
+                .transform(new RoundedCornersTransformation(16, 0)) // Use your custom transformation here
+                .into(holder.foodImage);
+//        Glide.with(holder.itemView.getContext()).load(foodItem.getImage()).error(R.drawable.ic_image_placeholder).into(holder.foodImage);
         holder.foodName.setText(foodItem.getName());
         holder.foodDescription.setText(foodItem.getDescription());
         holder.foodPrice.setText(String.format("%,d VNĐ", foodItem.getPrice()));
