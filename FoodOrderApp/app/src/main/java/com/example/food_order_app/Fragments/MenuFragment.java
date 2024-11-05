@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +42,8 @@ public class MenuFragment extends Fragment {
     private TextView txt_title;
     private ProgressBar progressBar;
     private EditText txt_search;
-
+    private ImageView btn_sort;
+    private boolean isAscending = true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -156,6 +158,21 @@ public class MenuFragment extends Fragment {
         txt_title = v.findViewById(R.id.txt_title);
         progressBar = v.findViewById(R.id.progress_bar);
         txt_search = v.findViewById(R.id.txt_search);
+        btn_sort = v.findViewById(R.id.btn_sort);
+
+        btn_sort.setOnClickListener(view -> {
+            if (isAscending) {
+                sortFoodItemsByPriceAscending();
+                btn_sort.setImageResource(R.drawable.ic_sort_ascending);
+            } else {
+                sortFoodItemsByPriceDescending();
+                btn_sort.setImageResource(R.drawable.ic_sort_descending);
+            }
+            isAscending = !isAscending;
+        });
+
+
+
 
         txt_search.addTextChangedListener(new TextWatcher() {
             @Override
@@ -179,6 +196,17 @@ public class MenuFragment extends Fragment {
         btn_burger.setOnClickListener(v1 -> selectCategory("Burger"));
         btn_drinks.setOnClickListener(v1 -> selectCategory("Drinks"));
         btn_dessert.setOnClickListener(v1 -> selectCategory("Dessert"));
+    }
+
+
+    private void sortFoodItemsByPriceAscending() {
+        foodItemList.sort((item1, item2) -> Double.compare(item1.getPrice(), item2.getPrice()));
+        adapter.setData(foodItemList);
+    }
+
+    private void sortFoodItemsByPriceDescending() {
+        foodItemList.sort((item1, item2) -> Double.compare(item2.getPrice(), item1.getPrice()));
+        adapter.setData(foodItemList);
     }
 
     private void filterFoodItemsBySearch(String string) {
