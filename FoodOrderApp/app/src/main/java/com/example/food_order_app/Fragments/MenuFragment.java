@@ -46,6 +46,8 @@ public class MenuFragment extends Fragment {
     private boolean isAscending = true;
     private String currentCategory = null;
     private String currentSearchQuery = "";
+    private TextView txt_empty;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -161,7 +163,7 @@ public class MenuFragment extends Fragment {
         progressBar = v.findViewById(R.id.progress_bar);
         txt_search = v.findViewById(R.id.txt_search);
         btn_sort = v.findViewById(R.id.btn_sort);
-
+        txt_empty = v.findViewById(R.id.txt_empty);
         btn_sort.setOnClickListener(view -> {
             if (isAscending) {
                 isAscending = false;
@@ -231,6 +233,14 @@ public class MenuFragment extends Fragment {
         }
 
         adapter.setData(filteredList);
+
+        if (filteredList.isEmpty()) {
+            rcv.setVisibility(View.GONE);
+            txt_empty.setVisibility(View.VISIBLE);
+        } else {
+            rcv.setVisibility(View.VISIBLE);
+            txt_empty.setVisibility(View.GONE);
+        }
     }
 
     private void selectCategory(String category) {
