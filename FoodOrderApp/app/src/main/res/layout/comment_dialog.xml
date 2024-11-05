@@ -10,7 +10,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Đánh giá sản phẩm"
+        android:text="Review Food"
         android:textSize="18sp"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"
@@ -26,12 +26,12 @@
         android:layout_gravity="center_horizontal"
         android:paddingBottom="10dp" />
 
-    <!-- Comment field -->
+
     <EditText
         android:id="@+id/edtComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Viết nhận xét của bạn..."
+        android:hint="Please write your review..."
         android:background="@drawable/edit_text_background"
         android:padding="10dp"
         android:minHeight="100dp"
@@ -42,7 +42,7 @@
         android:id="@+id/btnSubmitRating"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Đánh giá"
+        android:text="Review"
         android:textColor="@android:color/white"
         android:backgroundTint="@color/orange_dark"
         android:layout_marginTop="15dp" />

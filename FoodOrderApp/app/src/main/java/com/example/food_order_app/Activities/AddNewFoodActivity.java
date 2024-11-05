@@ -42,6 +42,7 @@ public class AddNewFoodActivity extends AppCompatActivity {
     private StorageReference storageReference;
     private ProgressDialog progressDialog;
     private String name, price, quantity, description, category;
+    private ImageView icBack;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +59,12 @@ public class AddNewFoodActivity extends AppCompatActivity {
         imageViewFood = findViewById(R.id.imgPreview);
         btnAddFood = findViewById(R.id.btnAddFood);
         btnChooseImage = findViewById(R.id.btnChooseImage);
+        icBack = findViewById(R.id.icBack);
+
+
+        icBack.setOnClickListener(v -> {
+            finish();
+        });
 
         // Tạo danh sách danh mục cho Spinner
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
