@@ -58,7 +58,6 @@ public class ProfileFragment extends Fragment {
         btnOrder = view.findViewById(R.id.btnOrder);
         btnFavourite = view.findViewById(R.id.btnFavourite);
 
-        // Load user data after view has been created
         fetchUserData();
 
         btnOrder.setOnClickListener(v -> {
