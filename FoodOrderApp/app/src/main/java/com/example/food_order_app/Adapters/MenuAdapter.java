@@ -57,12 +57,12 @@ public class MenuAdapter extends RecyclerView.Adapter<MenuAdapter.FoodItemViewHo
             return;
         }
 
-        Glide.with(holder.itemView.getContext())
-                .load(foodItem.getImage())
-                .error(R.drawable.ic_image_placeholder)
-                .transform(new RoundedCornersTransformation(16, 0)) // Use your custom transformation here
-                .into(holder.foodImage);
-//        Glide.with(holder.itemView.getContext()).load(foodItem.getImage()).error(R.drawable.ic_image_placeholder).into(holder.foodImage);
+//        Glide.with(holder.itemView.getContext())
+//                .load(foodItem.getImage())
+//                .error(R.drawable.ic_image_placeholder)
+//                .transform(new RoundedCornersTransformation(16, 0)) // Use your custom transformation here
+//                .into(holder.foodImage);
+        Glide.with(holder.itemView.getContext()).load(foodItem.getImage()).error(R.drawable.ic_image_placeholder).into(holder.foodImage);
         holder.foodName.setText(foodItem.getName());
         holder.foodDescription.setText(foodItem.getDescription());
         holder.foodPrice.setText(String.format("%,d VNĐ", foodItem.getPrice()));

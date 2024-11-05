@@ -65,20 +65,40 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <EditText
-        android:id="@+id/txt_search"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/search_background"
-        android:drawableLeft="@drawable/ic_search"
-        android:elevation="2dp"
-        android:ems="10"
-        android:hint="Search for today's meal"
-        android:inputType="text"
-        android:padding="10dp"
-        android:textSize="20sp" /> <!-- Đổi từ dp sang sp -->
+        android:layout_marginTop="10dp">
+
+        <EditText
+            android:id="@+id/txt_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/search_background"
+            android:drawableLeft="@drawable/ic_search"
+            android:elevation="2dp"
+            android:ems="10"
+            android:hint="Search for today's meal"
+            android:inputType="text"
+            android:padding="10dp"
+            android:textSize="20sp"
+            android:layout_toStartOf="@+id/btn_sort"
+            android:layout_alignParentStart="true" />
+
+        <ImageView
+            android:id="@+id/btn_sort"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_sort_ascending"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="10dp"
+            android:layout_alignBottom="@id/txt_search"
+            android:layout_alignTop="@id/txt_search"
+            android:contentDescription="Sort Button"
+            android:padding="5dp" />
+    </RelativeLayout>
+
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

@@ -18,11 +18,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.bitmap.CenterCrop;
 import com.example.food_order_app.Adapters.CommentsAdapter;
 import com.example.food_order_app.Models.Cart;
 import com.example.food_order_app.Models.FoodItem;
 import com.example.food_order_app.Models.Review;
 import com.example.food_order_app.R;
+import com.example.food_order_app.Utils.RoundedCornersTransformation;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -281,7 +283,12 @@ public class FoodDetailActivity extends AppCompatActivity {
         foodPrice.setText(String.format("%,d VNĐ", snapshot.child("price").getValue(Long.class)));
         foodRating.setText(String.format("★ %.1f", snapshot.child("rating").getValue(Double.class)));
         foodCategory.setText(snapshot.child("category").getValue(String.class));
-        Glide.with(this).load(snapshot.child("image").getValue(String.class)).error(R.drawable.ic_image_placeholder).into(foodImage1);
+        Glide.with(this)
+                .load(snapshot.child("image").getValue(String.class))
+                .error(R.drawable.ic_image_placeholder)
+                .transform(new CenterCrop(), new RoundedCornersTransformation(30, 0)) // Adjust radius (30) as needed
+                .into(foodImage1);
+//        Glide.with(this).load(snapshot.child("image").getValue(String.class)).error(R.drawable.ic_image_placeholder).into(foodImage1);
     }
 
     private void addComment() {

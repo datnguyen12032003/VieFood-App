@@ -197,7 +197,7 @@ fetchUserData();
                 Collections.sort(foodItems, new Comparator<FoodItem>() {
                     @Override
                     public int compare(FoodItem o1, FoodItem o2) {
-                        return Integer.compare(o2.getQuantity(), o1.getQuantity());
+                        return Double.compare(o2.getRating(), o1.getRating());
                     }
                 });
 
