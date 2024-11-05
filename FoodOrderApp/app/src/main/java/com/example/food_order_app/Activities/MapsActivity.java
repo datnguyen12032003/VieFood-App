@@ -10,6 +10,9 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.SearchView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -57,9 +60,43 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
             mapFragment.getMapAsync(this);
         }
 
+        SearchView searchView = findViewById(R.id.search_view);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                Geocoder geocoder = new Geocoder(MapsActivity.this, Locale.getDefault());
+                try {
+                    List<android.location.Address> addressList = geocoder.getFromLocationName(query, 1);
+                    if (addressList != null && !addressList.isEmpty()) {
+                        android.location.Address address = addressList.get(0);
+                        LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                        mMap.clear();
+                        mMap.addMarker(new MarkerOptions().position(latLng).title(address.getAddressLine(0)));
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                    } else {
+                        Toast.makeText(MapsActivity.this, "Location not found", Toast.LENGTH_SHORT).show();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(MapsActivity.this, "Error finding location", Toast.LENGTH_SHORT).show();
+                }
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
+
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
         createLocationCallback();
 
+        Button backButton = findViewById(R.id.btn_back);
+        backButton.setOnClickListener(v -> {
+            finish();
+        });
         Button selectButton = findViewById(R.id.btn_select);
         selectButton.setOnClickListener(v -> {
             if (selectedLocation != null) {
@@ -72,6 +109,27 @@ public class MapsActivity extends AppCompatActivity implements OnMapReadyCallbac
                 Toast.makeText(this, "Please select a location on the map.", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void searchLocation(String location) {
+        Geocoder geocoder = new Geocoder(this);
+        List<android.location.Address> addressList;
+        try {
+            addressList = geocoder.getFromLocationName(location, 1);
+            if (addressList != null && !addressList.isEmpty()) {
+                android.location.Address address = addressList.get(0);
+                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
+                mMap.clear();
+                mMap.addMarker(new MarkerOptions().position(latLng).title(location));
+                mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
+                selectedLocation = latLng; // Update selected location
+            } else {
+                Toast.makeText(this, "Location not found", Toast.LENGTH_SHORT).show();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Unable to find location", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

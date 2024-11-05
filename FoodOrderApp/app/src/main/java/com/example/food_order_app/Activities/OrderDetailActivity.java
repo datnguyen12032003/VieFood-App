@@ -75,11 +75,8 @@ public class OrderDetailActivity extends AppCompatActivity {
             reorderButton.setVisibility(View.VISIBLE);
         }
 
-        icBack.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                onBackPressed();
-            }
+        icBack.setOnClickListener(v -> {
+            finish();
         });
 
         orderIdTextView = findViewById(R.id.orderId);
