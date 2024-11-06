@@ -44,8 +44,10 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
         if (notification.isSeen()) {
             holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.white));
+            holder.tvNewLabel.setVisibility(View.GONE);
         } else {
             holder.itemView.setBackgroundColor(holder.itemView.getContext().getResources().getColor(R.color.gray));
+            holder.tvNewLabel.setVisibility(View.VISIBLE);
         }
 
         holder.itemView.setOnClickListener(v -> {
@@ -71,18 +73,22 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         context.startActivity(intent);
     }
 
+
+
     @Override
     public int getItemCount() {
         return notificationList.size();
     }
 
     public static class NotificationViewHolder extends RecyclerView.ViewHolder {
-        TextView tvNotificationMessage, tvNotificationDate;
+        TextView tvNotificationMessage, tvNotificationDate, tvNewLabel;
 
         public NotificationViewHolder(@NonNull View itemView) {
             super(itemView);
             tvNotificationMessage = itemView.findViewById(R.id.tvNotificationMessage);
             tvNotificationDate = itemView.findViewById(R.id.tvNotificationDate);
+            tvNewLabel = itemView.findViewById(R.id.tvNewLabel);
+
         }
     }
 }

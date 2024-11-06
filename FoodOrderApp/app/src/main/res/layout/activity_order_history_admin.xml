@@ -26,9 +26,9 @@
             android:id="@+id/title_order_history"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="List of All Orders"
+            android:text="List of all orders"
             android:textColor="#FF5722"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
     </LinearLayout>
 
@@ -53,5 +53,39 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:paddingTop="8dp" />
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp"
+        android:clipToPadding="false"
+        android:overScrollMode="ifContentScrolls" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginTop="16dp">
+
+
+        <TextView
+            android:id="@+id/order_count"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total Orders: 0"
+            android:textColor="#555"
+            android:textSize="16sp"
+            android:layout_marginBottom="4dp" />
+
+        <TextView
+            android:id="@+id/total_price"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Total Price: $0.00"
+            android:textColor="#FF5722"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+
+    </LinearLayout>
+
+
+
 </LinearLayout>

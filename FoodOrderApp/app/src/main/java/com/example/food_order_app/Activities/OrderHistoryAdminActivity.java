@@ -5,8 +5,11 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -34,6 +37,10 @@ public class OrderHistoryAdminActivity extends AppCompatActivity {
     private ImageView icBack;
     private Spinner statusSpinner;
     private String selectedStatus = "All";
+    private TextView orderCountTextView;
+    private TextView totalPriceTextView;
+    private double totalPrice = 0;
+    private Button buttonStatistics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,8 @@ public class OrderHistoryAdminActivity extends AppCompatActivity {
         icBack = findViewById(R.id.ic_back);
         statusSpinner = findViewById(R.id.status_spinner);
 
+        orderCountTextView = findViewById(R.id.order_count);
+        totalPriceTextView = findViewById(R.id.total_price);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.order_status_array, android.R.layout.simple_spinner_item);
@@ -53,6 +62,7 @@ public class OrderHistoryAdminActivity extends AppCompatActivity {
         statusSpinner.setAdapter(adapter);
 
 
+        
         statusSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -73,8 +83,10 @@ public class OrderHistoryAdminActivity extends AppCompatActivity {
             }
         });
 
+
         setupRecyclerView();
         loadAllOrders();
+
     }
 
     private void setupRecyclerView() {
@@ -88,10 +100,14 @@ public class OrderHistoryAdminActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 orderList.clear();
+                totalPrice = 0;
                 for (DataSnapshot orderSnapshot : snapshot.getChildren()) {
                     Order order = orderSnapshot.getValue(Order.class);
                     orderList.add(order);
+                    totalPrice += order.getOrderTotal();
                 }
+                orderCountTextView.setText("Total Orders: " + orderList.size());
+                totalPriceTextView.setText("Total Price: " + totalPrice);
                 orderHistoryAdminAdapter.notifyDataSetChanged();
             }
 
@@ -107,6 +123,7 @@ public class OrderHistoryAdminActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot snapshot) {
                 orderList.clear();
+                double totalPrice = 0;
                 long currentTime = System.currentTimeMillis();
                 long oneHourAgo = currentTime - 60 * 60 * 1000;
 
@@ -127,13 +144,17 @@ public class OrderHistoryAdminActivity extends AppCompatActivity {
                             orderList.add(order);
                         }
                     }
+                    totalPrice += order.getOrderTotal();
                 }
+
+                orderCountTextView.setText("Total Orders: " + orderList.size());
+                totalPriceTextView.setText("Total Price: " + totalPrice);
                 orderHistoryAdminAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onCancelled(DatabaseError error) {
-                // Xử lý lỗi nếu cần
+
             }
         });
     }
