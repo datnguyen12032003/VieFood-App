@@ -29,7 +29,6 @@ import java.util.List;
 
 public class NotificationActivity extends AppCompatActivity {
 
-
     private RecyclerView recyclerNotifications;
     private NotificationAdapter notificationAdapter;
     private List<Notification> notificationList;
@@ -53,15 +52,6 @@ public class NotificationActivity extends AppCompatActivity {
 
         TextView textViewMarkAllAsRead = findViewById(R.id.textViewMarkAllAsRead);
         textViewMarkAllAsRead.setOnClickListener(v -> markAllNotificationsAsRead(userId));
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            NotificationChannel channel = new NotificationChannel("AdminChannel",
-//                    "Admin Notifications",
-//                    NotificationManager.IMPORTANCE_DEFAULT);
-//            NotificationManager manager = getSystemService(NotificationManager.class);
-//            if (manager != null) {
-//                manager.createNotificationChannel(channel);
-//            }
-//        }
 
         ImageView ivBack = findViewById(R.id.ivBack);
         ivBack.setOnClickListener(v -> finish());
@@ -77,9 +67,12 @@ public class NotificationActivity extends AppCompatActivity {
                         Notification notification = snapshot.getValue(Notification.class);
                         if (notification != null) {
                             notificationList.add(0, notification);
-                            if (!notification.isSeen()) {
+                            // Only send notification if the notification is newly added and unread
+                            if (!notification.isSeen() && !snapshot.hasChild("isProcessingRead")) {
                                 sendAdminNotification(notification.getMessage());
-                            }                        }
+                                snapshot.getRef().child("isProcessingRead").setValue(true); // Mark as processed
+                            }
+                        }
                     }
                     notificationAdapter.notifyDataSetChanged();
                 }
@@ -90,7 +83,7 @@ public class NotificationActivity extends AppCompatActivity {
                 }
             });
 
-    } else {
+        } else {
             dbNotifications.orderByChild("userId").equalTo(userId).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot dataSnapshot) {
@@ -123,7 +116,7 @@ public class NotificationActivity extends AppCompatActivity {
                         updateNotificationSeenStatus(notification.getId());
                     }
                 }
-                Toast.makeText(NotificationActivity.this, "All notifications as read", Toast.LENGTH_SHORT).show();
+                Toast.makeText(NotificationActivity.this, "All notifications marked as read", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -136,8 +129,10 @@ public class NotificationActivity extends AppCompatActivity {
     private void updateNotificationSeenStatus(String notificationId) {
         dbNotifications.child(notificationId).child("seen").setValue(true)
                 .addOnSuccessListener(aVoid -> {
+                    // Optional: handle success feedback if needed
                 })
                 .addOnFailureListener(e -> {
+                    // Optional: handle failure feedback if needed
                 });
     }
 
